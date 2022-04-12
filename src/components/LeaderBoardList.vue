@@ -1,22 +1,27 @@
 <template>
   <template v-if="users">
-    <v-list color="white" elevation="1" three-line>
+    <v-list color="white" elevation="1" three-line min-height="400">
       <v-list-subheader :style="backgroundColor" :color="textColor">
         {{ subheader }}
       </v-list-subheader>
-      <template v-for="(vup, i) in users" :key="i">
-        <v-list-item
-         
-          :height="i == 0 ? '100px' : 'auto'"
-          :prepend-avatar="vup.face"
-          :title="vup.name"
-          :subtitle="subtitle.replace('%count%', vup.count)"
-        >
-        <v-list-item-icon v-if="i == 0">
-            <v-icon large >mdi-crown</v-icon>
-        </v-list-item-icon>
-        </v-list-item>
-        <v-divider />
+      <template v-if="users.length > 0">
+        <template v-for="(vup, i) in users" :key="i">
+          <v-list-item
+            :height="i == 0 ? '100px' : 'auto'"
+            :prepend-avatar="vup.face"
+            :title="vup.name"
+            :subtitle="subtitle.replace('%count%', vup.count)"
+            :to="`/user/${vup.uid}`"
+          >
+            <template v-if="i == 0">
+              <v-icon large>mdi-crown</v-icon>
+            </template>
+          </v-list-item>
+          <v-divider />
+        </template>
+      </template>
+      <template v-else>
+        <v-list-item class="text-center" title="没有记录"></v-list-item>
       </template>
     </v-list>
   </template>
@@ -59,7 +64,9 @@ export default {
 
   computed: {
     backgroundColor() {
-      return this.bgColor ? `background-color: ${this.bgColor}; font-weight: bold` : "";
+      return this.bgColor
+        ? `background-color: ${this.bgColor}; font-weight: bold`
+        : "";
     },
   },
 };

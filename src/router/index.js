@@ -7,9 +7,14 @@ const routes = [
     component: () => import('../views/HomeView.vue')
   },
   {
-    path: '/user',
+    path: '/users',
     name: 'user',
     component: () => import('../views/UserView.vue')
+  },
+  {
+    path: '/user/:uid',
+    name: 'user-detail',
+    component: () => import('../views/UserDetailView.vue')
   },
   {
     path: '/about',

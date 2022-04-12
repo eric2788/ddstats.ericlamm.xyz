@@ -33,7 +33,7 @@
     <v-row class="pt-5 pb-5">
       <v-col cols="12" md="6">
         <leader-board-list
-             bgColor="#f52500"
+             bgColor="#383838"
              textColor="white"
              :users="stats.most_dd_vups" 
              subheader="访问最多的直播间"
@@ -42,7 +42,7 @@
       </v-col>
       <v-col cols="12" md="6">
         <leader-board-list
-              bgColor="#f56600"
+              bgColor="#383838"
               textColor="white"
               :users="stats.most_dd_behaviour_vups"
               subheader="进入直播间/往别的直播间发送SC/弹幕最多"
@@ -55,7 +55,7 @@
     <v-row class="pt-5 pb-5">
       <v-col cols="12" md="4">
         <leader-board-list 
-            bgColor="#006af5"
+            bgColor="#383838"
             textColor="white"
             :users="stats?.most_dd_behaviour_vup_commands?.DANMU_MSG"
             subheader="往别的直播间发送弹幕次数最多"
@@ -64,7 +64,7 @@
       </v-col>
       <v-col cols="12" md="4">
         <leader-board-list 
-            bgColor="#5800e6"
+            bgColor="#383838"
             textColor="white"
             :users="stats?.most_dd_behaviour_vup_commands?.INTERACT_WORD"
             subheader="进入别人的直播间次数最多"
@@ -73,7 +73,7 @@
       </v-col>
       <v-col cols="12" md="4">
         <leader-board-list 
-            bgColor="#50b352"
+            bgColor="#383838"
             textColor="white"
             :users="stats?.most_dd_behaviour_vup_commands?.SUPER_CHAT_MESSAGE"
             subheader="往别人的直播间发送SC次数最多"
@@ -113,7 +113,7 @@ export default {
       })
       .catch((err) => {
         console.error(err);
-        this.$emit('showError', '加载统计数据时错误: ' + err?.message ?? err);
+        this.$emit('showError', '加载统计数据时错误: ' + err?.response?.message ?? err?.response ?? err);
       });
   },
 };
