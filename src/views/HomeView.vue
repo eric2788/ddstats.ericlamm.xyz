@@ -143,14 +143,26 @@ export default {
       stats: {},
       expands_1: [],
       expands_2: [],
+
+
+      refresh_interval: -1
     };
   },
 
   mounted() {
-    api
+    this.fetchData().then(() => this.onMobileChanged(this.$vuetify.display.smAndDown));
+
+    this.refresh_interval = setInterval(this.fetchData, 1000 * 60);
+  },
+
+  methods: {
+
+    fetchData(){
+      return api
       .getGlobalStats()
       .then((data) => {
         this.stats = data;
+        console.debug('refresh completed.')
       })
       .catch((err) => {
         console.error(err);
@@ -160,10 +172,8 @@ export default {
             err?.response ??
             err
         );
-      }).then(() => this.onMobileChanged(this.$vuetify.display.smAndDown));
-  },
-
-  methods: {
+      })
+    },
     onMobileChanged(v) {
       if (v) {
         this.expands_1 = [];
@@ -179,6 +189,10 @@ export default {
 
   created() {
     this.observers[this.$options.name] = this.onMobileChanged;
+  },
+
+  beforeUnmount(){
+    clearInterval(this.refresh_interval)
   },
 };
 </script>
