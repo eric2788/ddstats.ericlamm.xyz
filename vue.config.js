@@ -19,12 +19,8 @@ module.exports = defineConfig({
       })
   },
   pwa: {
-    iconPaths: {
-      favicon32: 'img/icons/favicon-32x32.png',
-      favicon16: 'img/icons/favicon-16x16.png',
-      appleTouchIcon: 'img/icons/apple-touch-icon-120x120.png',
-      maskIcon: 'img/icons/favicon.ico',
-      msTileImage: 'img/icons/mstile-150x150.png',
-    }
+    name: 'DDStats 高亮用户统计',
+    themeColor: '#409cff',
+    msTileColor: '#ffffff'
   }
 })
