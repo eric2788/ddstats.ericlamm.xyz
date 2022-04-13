@@ -81,7 +81,7 @@ export default {
     ],
     drawer: true,
     snackbar: false,
-    text: '',
+    text: "",
 
     mobileChangeObservers: {}
   }),
@@ -99,17 +99,26 @@ export default {
     },
   },
 
-
   provide() {
-    return { observers: this.mobileChangeObservers}
+    return { observers: this.mobileChangeObservers };
   },
 
   watch: {
     isMobile() {
       this.drawer = true;
-      console.log('mobile: '+this.$vuetify.display.smAndDown)
-      Object.values(this.mobileChangeObservers).forEach((cb) => cb(this.$vuetify.display.smAndDown));
+      console.log("mobile: " + this.$vuetify.display.smAndDown);
+      Object.values(this.mobileChangeObservers).forEach((cb) =>
+        cb(this.$vuetify.display.smAndDown)
+      );
     },
+  },
+
+  created() {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      e.prompt();
+    });
   },
 };
 </script>
