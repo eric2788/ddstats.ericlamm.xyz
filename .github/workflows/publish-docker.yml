@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
-      - nme: Test Program
+      - name: Test Program
         run: |
           npm CI
           npm run test:unit
