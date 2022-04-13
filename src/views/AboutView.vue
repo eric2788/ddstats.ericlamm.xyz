@@ -2,7 +2,7 @@
   <v-container class="pa-10">
       <v-row>
         <v-col cols=12 class="mb-10">
-          <v-img src="/img/miriya.jpg" max-height=256 />
+          <v-img :src="`/img/miriya.${Math.random() > 0.5 ? 'png' : 'jpg'}`" max-height=256 />
         </v-col>
       </v-row>
       <v-row>

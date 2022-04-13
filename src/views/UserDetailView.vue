@@ -1,9 +1,26 @@
 <template>
   <v-container class="pa-5">
     <template v-if="!vup || loading">
-      <v-row align="center" justify="center" class="pt-15">
-        <v-progress-circular indeterminate></v-progress-circular>
-      </v-row>
+      <template v-if="!!error">
+        <v-alert border type="error">
+          <v-alert-title>用戶资讯加载失败: </v-alert-title>
+          {{ error }}
+        </v-alert>
+        <v-btn
+          class="mt-5"
+          color="blue"
+          variant="outlined"
+          @click="$router.replace('/users')"
+        >
+          <v-icon left>mdi-arrow-left</v-icon>
+          返回列表
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-row align="center" justify="center" class="pt-15">
+          <v-progress-circular indeterminate></v-progress-circular>
+        </v-row>
+      </template>
     </template>
     <template v-else>
       <user-list-view :vup="vup" link="https://space.bilibili.com/%uid%">
@@ -24,7 +41,7 @@
           >
             <v-avatar
               class="float-right"
-              :image="vup.face.replace('http://','https://')"
+              :image="vup.face.replace('http://', 'https://')"
               size="86"
               rounded="0"
             />
@@ -56,7 +73,11 @@
                   :href="`https://live.bilibili.com/${vup.room_id}`"
                   target="_blank"
                 >
-                  {{ $vuetify.display.mdAndDown ? vup.room_id : `https://live.bilibili.com/${vup.room_id}` }}
+                  {{
+                    $vuetify.display.mdAndDown
+                      ? vup.room_id
+                      : `https://live.bilibili.com/${vup.room_id}`
+                  }}
                 </a>
               </v-row>
             </v-col>
@@ -93,6 +114,7 @@ export default {
   data: () => ({
     vup: null,
     loading: true,
+    error: "",
   }),
 
   created() {
@@ -116,12 +138,11 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.$emit(
-            "showError",
-            "加载用户资讯时错误: " + err?.response?.data?.message ??
-              err?.response?.data ??
-              err
-          );
+
+          this.error =
+            err?.response?.data?.message ?? err?.response?.data ?? err;
+
+          this.$emit("showError", "加载用户资讯时错误: " + this.error);
         })
         .finally(() => (this.loading = false));
     },
