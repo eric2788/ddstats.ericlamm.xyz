@@ -20,6 +20,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import('../views/AboutView.vue')
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: '404',
+    redirect: '/'
   }
 ]
 

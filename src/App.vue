@@ -16,7 +16,7 @@
     >
       <v-list>
         <v-list-item
-          prepend-avatar="../img/dd.png"
+          prepend-avatar="/img/dd.png"
           title="高亮用户统计"
           subtitle="ddstats.ericlamm.xyz"
         ></v-list-item>
@@ -35,7 +35,7 @@
         <v-list>
           <v-list-item
             to="/about"
-            :prepend-avatar="'img/author.jpg'"
+            prepend-avatar="/img/author.jpg"
             title="关于本网站"
             subtitle="Eric Lam"
           ></v-list-item>
