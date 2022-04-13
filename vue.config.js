@@ -7,7 +7,20 @@ module.exports = defineConfig({
   },
   pluginOptions: {
     vuetify: {
-			// https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
-		}
+      // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
+    }
   },
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = 'DDStats - 高亮用户统计'
+        return args
+      })
+  },
+  pwa: {
+    iconPaths: {
+      favicon32: 'img/icons/favicon-32x32.png',
+    }
+  }
 })
