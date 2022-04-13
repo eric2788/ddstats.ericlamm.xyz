@@ -24,7 +24,7 @@
           >
             <v-avatar
               class="float-right"
-              :image="vup.face"
+              :image="vup.face.replace('http://','https://')"
               size="86"
               rounded="0"
             />
