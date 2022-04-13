@@ -14,7 +14,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    if:  {{ false }} # nothing to test
+    if:  ${{ false }} # nothing to test
     steps:
       - uses: actions/checkout@v2
 
