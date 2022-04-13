@@ -8,7 +8,7 @@
         >
           <v-avatar
             class="float-right"
-            :image="vup.face"
+            :image="vup.face.replace('http','https')"
             rounded="0"
             size="86"
           />

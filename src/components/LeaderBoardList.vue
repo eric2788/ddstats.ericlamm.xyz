@@ -8,7 +8,7 @@
         <template v-for="(vup, i) in users" :key="i">
           <v-list-item
             :height="i == 0 ? '100px' : 'auto'"
-            :prepend-avatar="vup.face"
+            :prepend-avatar="vup.face.replace('http','https')"
             :title="vup.name"
             :subtitle="subtitle.replace('%count%', vup.count)"
             :to="`/user/${vup.uid}`"

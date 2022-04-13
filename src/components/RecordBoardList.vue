@@ -5,7 +5,7 @@
         <v-list-item
           :title="new Date(item.created_at).toLocaleString()"
           :subtitle="item.display"
-          :append-avatar="item.image?.String ?? ''"
+          :append-avatar="item.image?.String?.replace('http','https') ?? ''"
         ></v-list-item>
         <v-divider />
       </template>
