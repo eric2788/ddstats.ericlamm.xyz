@@ -1,7 +1,5 @@
 <template>
   <v-container class="pa-5">
-    <h2>统计</h2>
-    <v-divider></v-divider>
     <v-row class="pt-5 pb-5">
       <v-col cols="12" sm="12" md="4">
         <statistic-count-board
@@ -28,59 +26,100 @@
         ></statistic-count-board>
       </v-col>
     </v-row>
-     <h2>DD风云榜</h2>
-     <v-divider></v-divider>
-    <v-row class="pt-5 pb-5">
-      <v-col cols="12" md="6">
-        <leader-board-list
-             bgColor="#383838"
-             textColor="white"
-             :users="stats.most_dd_vups" 
-             subheader="访问最多的直播间"
-             subtitle="共访问过 %count% 个不同的直播间"
-             ></leader-board-list>
-      </v-col>
-      <v-col cols="12" md="6">
-        <leader-board-list
-              bgColor="#383838"
-              textColor="white"
-              :users="stats.most_dd_behaviour_vups"
-              subheader="进入直播间/往别的直播间发送SC/弹幕最多"
-              subtitle="进入直播间/往别的直播间发送SC/弹幕共 %count% 次"
-            />
-      </v-col>
-    </v-row>
-    <h2>DD次数行为大赏</h2>
-    <v-divider></v-divider>
-    <v-row class="pt-5 pb-5">
-      <v-col cols="12" md="4">
-        <leader-board-list 
-            bgColor="#383838"
-            textColor="white"
-            :users="stats?.most_dd_behaviour_vup_commands?.DANMU_MSG"
-            subheader="往别的直播间发送弹幕次数最多"
-            subtitle="往别的直播间发送弹幕共 %count% 次"
-        />
-      </v-col>
-      <v-col cols="12" md="4">
-        <leader-board-list 
-            bgColor="#383838"
-            textColor="white"
-            :users="stats?.most_dd_behaviour_vup_commands?.INTERACT_WORD"
-            subheader="进入别人的直播间次数最多"
-            subtitle="进入别人的直播间共 %count% 次"
-        />
-      </v-col>
-      <v-col cols="12" md="4">
-        <leader-board-list 
-            bgColor="#383838"
-            textColor="white"
-            :users="stats?.most_dd_behaviour_vup_commands?.SUPER_CHAT_MESSAGE"
-            subheader="往别人的直播间发送SC次数最多"
-            subtitle="往别人的直播间发送SC共 %count% 次"
-        />
-      </v-col>
-    </v-row>
+    <v-divider />
+    <h3 class="mt-5 mb-3">DD风云榜</h3>
+    <v-expansion-panels theme="light" multiple v-model="expands_1">
+      <v-container class="pa-0">
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-expansion-panel class="el-border" elevation="0" value="1-1">
+              <v-expansion-panel-title>
+                <v-icon large left>mdi-account-multiple</v-icon>
+                访问最多的直播间
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  :users="stats.most_dd_vups"
+                  subtitle="共访问过 %count% 个不同的直播间"
+                  class="elevation-0"
+                ></leader-board-list>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-expansion-panel class="el-border" elevation="0" value="1-2">
+              <v-expansion-panel-title>
+                <v-icon large left>mdi-alpha-d-box</v-icon>
+                进入直播间/往别的直播间发送SC/弹幕最多
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  class="elevation-0"
+                  :users="stats.most_dd_behaviour_vups"
+                  subtitle="进入直播间/往别的直播间发送SC/弹幕共 %count% 次"
+                />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-expansion-panels>
+
+    <h3 class="mt-5 mb-3">DD次数行为大赏</h3>
+    <v-expansion-panels theme="light" multiple v-model="expands_2">
+      <v-container class="pa-0">
+        <v-row>
+          <v-col cols="12" md="6" lg="4">
+            <v-expansion-panel class="el-border" elevation="0" value="2-1">
+              <v-expansion-panel-title>
+                <v-icon large left>mdi-email-send</v-icon>
+                往别的直播间发送弹幕次数最多
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  class="elevation-0"
+                  :users="stats?.most_dd_behaviour_vup_commands?.DANMU_MSG"
+                  subtitle="往别的直播间发送弹幕共 %count% 次"
+                />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+          <v-col cols="12" md="6" lg="4">
+            <v-expansion-panel class="el-border" elevation="0" value="2-2">
+              <v-expansion-panel-title>
+                <v-icon large left>mdi-location-enter</v-icon>
+                进入别人的直播间次数最多
+                </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  b
+                  class="elevation-0"
+                  :users="stats?.most_dd_behaviour_vup_commands?.INTERACT_WORD"
+                  subtitle="进入别人的直播间共 %count% 次"
+                />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+          <v-col cols="12" md="6" lg="4">
+            <v-expansion-panel class="el-border" elevation="0" value="2-3">
+              <v-expansion-panel-title>
+                <v-icon large left>mdi-chat-processing</v-icon>
+                往别人的直播间发送SC次数最多
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  class="elevation-0"
+                  :users="
+                    stats?.most_dd_behaviour_vup_commands?.SUPER_CHAT_MESSAGE
+                  "
+                  subtitle="往别人的直播间发送SC共 %count% 次"
+                />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-expansion-panels>
   </v-container>
 </template>
 
@@ -102,6 +141,8 @@ export default {
     return {
       message: "Hello Vue!",
       stats: {},
+      expands_1: [],
+      expands_2: [],
     };
   },
 
@@ -113,8 +154,31 @@ export default {
       })
       .catch((err) => {
         console.error(err);
-        this.$emit('showError', '加载统计数据时错误: ' + err?.response?.message ?? err?.response ?? err);
-      });
+        this.$emit(
+          "showError",
+          "加载统计数据时错误: " + err?.response?.message ??
+            err?.response ??
+            err
+        );
+      }).then(() => this.onMobileChanged(this.$vuetify.display.smAndDown));
+  },
+
+  methods: {
+    onMobileChanged(v) {
+      if (v) {
+        this.expands_1 = [];
+        this.expands_2 = [];
+      } else {
+        this.expands_1 = ["1-1", "1-2"];
+        this.expands_2 = ["2-1", "2-2", "2-3"];
+      }
+    },
+  },
+
+  inject: ["observers"],
+
+  created() {
+    this.observers[this.$options.name] = this.onMobileChanged;
   },
 };
 </script>

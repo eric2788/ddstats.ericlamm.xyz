@@ -9,8 +9,8 @@
           <v-avatar
             class="float-right"
             :image="vup.face"
-            size="86"
             rounded="0"
+            size="86"
           />
         </router-link>
       </slot>
@@ -22,12 +22,12 @@
             <span class="text-h6 mr-2">{{ vup.name }}</span>
           </router-link>
         </slot>
-        <v-chip rounded="0" color="green" v-if="vup.listening">监听中</v-chip>
+        <v-chip rounded="0" color="green" v-if="vup.listening">直播间监听中</v-chip>
       </v-row>
-      <v-row class="pt-5">
+      <v-row class="pt-1">
         <v-col cols="12" sm="6" md="6" lg="3">
-          <v-row>
-            <span class="text-caption">上次监听时间</span>
+          <v-row class="pt-5">
+            <span class="text-caption">上次直播间监听时间</span>
           </v-row>
           <v-row class="pt-4">
             {{
@@ -38,7 +38,7 @@
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">
-          <v-row>
+          <v-row class="pt-5">
             <span class="text-caption">上次DD时间</span>
           </v-row>
           <v-row class="pt-4">
@@ -49,16 +49,16 @@
             }}
           </v-row>
         </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-row>
+        <v-col cols="12" sm="6" md="6" lg="3">
+          <v-row class="pt-5">
             <span class="text-caption">总DD次数</span>
           </v-row>
           <v-row class="pt-4">
             {{ vup.dd_count }}
           </v-row>
         </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-row>
+        <v-col cols="12" sm="6" md="6" lg="3">
+          <v-row class="pt-5">
             <span class="text-caption">初始监听时间</span>
           </v-row>
           <v-row class="pt-4">
@@ -66,6 +66,7 @@
           </v-row>
         </v-col>
       </v-row>
+      <slot name="under"></slot>
     </v-col>
   </v-row>
 </template>

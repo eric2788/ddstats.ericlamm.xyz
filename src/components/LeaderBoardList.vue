@@ -1,7 +1,7 @@
 <template>
   <template v-if="users">
     <v-list color="white" elevation="1" three-line min-height="400">
-      <v-list-subheader :style="backgroundColor" :color="textColor">
+      <v-list-subheader  v-if="subheader" :style="backgroundColor" :color="textColor">
         {{ subheader }}
       </v-list-subheader>
       <template v-if="users.length > 0">

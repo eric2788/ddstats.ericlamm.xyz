@@ -86,7 +86,7 @@ export default {
     desc: true,
     loading: true,
 
-    orderBy: "上次监听时间",
+    orderBy: "上次DD时间",
     orderByList: ["总DD次数", "上次监听时间", "上次DD时间"],
 
     orderMap: {

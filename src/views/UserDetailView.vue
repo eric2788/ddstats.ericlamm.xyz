@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-5">
-    <template v-if="!vup">
+    <template v-if="!vup || loading">
       <v-row align="center" justify="center" class="pt-15">
         <v-progress-circular indeterminate></v-progress-circular>
       </v-row>
@@ -30,9 +30,44 @@
             />
           </a>
         </template>
+        <template v-slot:under>
+          <v-row class="pt-1" align="center">
+            <v-col cols="12" md="6" lg="4">
+              <v-row class="pt-5">
+                <span class="text-caption">个人简介</span>
+              </v-row>
+              <v-row class="pt-4">
+                {{ vup.sign }}
+              </v-row>
+            </v-col>
+            <v-col
+              cols="0"
+              sm="0"
+              md="0"
+              lg="2"
+              v-if="!$vuetify.display.mdAndDown"
+            ></v-col>
+            <v-col cols="12" md="6" lg="4">
+              <v-row class="pt-5">
+                <span class="text-caption">直播间传送门</span>
+              </v-row>
+              <v-row class="pt-4">
+                <a
+                  :href="`https://live.bilibili.com/${vup.room_id}`"
+                  target="_blank"
+                >
+                  {{ $vuetify.display.mdAndDown ? vup.room_id : `https://live.bilibili.com/${vup.room_id}` }}
+                </a>
+              </v-row>
+            </v-col>
+          </v-row>
+        </template>
       </user-list-view>
       <v-divider />
+      <v-row class="pa-5" justify="center"> </v-row>
       <vup-stats-board :vup="vup" />
+      <vup-stats-command-board :vup="vup" />
+      <vup-records-board :vup="vup" />
     </template>
   </v-container>
 </template>
@@ -40,15 +75,20 @@
 <script>
 import UserListView from "../components/UserListView.vue";
 import VupStatsBoard from "../components/VupStatsBoard.vue";
+import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
+import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 
 import userApi from "../api/user";
-import statsApi from "../api/stats";
-import recordsApi from "../api/records";
 
 export default {
   name: "UserDetailView",
 
-  components: { UserListView, VupStatsBoard },
+  components: {
+    UserListView,
+    VupStatsBoard,
+    VupStatsCommandBoard,
+    VupRecordsBoard,
+  },
 
   data: () => ({
     vup: null,
@@ -59,7 +99,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        if (!this.$route.params.uid) return
+        if (!this.$route.params.uid) return;
         this.fetchData();
       },
       { immediate: true }
@@ -72,7 +112,6 @@ export default {
       userApi
         .getUser(this.$route.params.uid)
         .then((res) => {
-          console.log(res);
           this.vup = res;
         })
         .catch((err) => {

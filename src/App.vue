@@ -35,8 +35,8 @@
         <v-list>
           <v-list-item
             to="/about"
-            prepend-avatar="https://avatars.githubusercontent.com/u/6276840?v=4"
-            title="关于作者"
+            :prepend-avatar="'img/author.jpg'"
+            title="关于本网站"
             subtitle="Eric Lam"
           ></v-list-item>
         </v-list>
@@ -81,12 +81,14 @@ export default {
     ],
     drawer: true,
     snackbar: false,
-    text: ''
+    text: '',
+
+    mobileChangeObservers: {}
   }),
 
   computed: {
     isMobile() {
-      return this.$vuetify.display.mobile;
+      return this.$vuetify.display.smAndDown;
     },
   },
 
@@ -97,9 +99,16 @@ export default {
     },
   },
 
+
+  provide() {
+    return { observers: this.mobileChangeObservers}
+  },
+
   watch: {
     isMobile() {
       this.drawer = true;
+      console.log('mobile: '+this.$vuetify.display.smAndDown)
+      Object.values(this.mobileChangeObservers).forEach((cb) => cb(this.$vuetify.display.smAndDown));
     },
   },
 };
