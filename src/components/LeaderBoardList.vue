@@ -1,6 +1,6 @@
 <template>
   <template v-if="users">
-    <v-list color="white" elevation="1" three-line min-height="400">
+    <v-list color="white" elevation="1" three-line height="400" class="scrollable">
       <v-list-subheader  v-if="subheader" :style="backgroundColor" :color="textColor">
         {{ subheader }}
       </v-list-subheader>
@@ -15,6 +15,9 @@
           >
             <template v-if="i == 0">
               <v-icon large>mdi-crown</v-icon>
+            </template>
+            <template v-else>
+              <v-icon large>mdi-numeric-{{ i + 1 }}</v-icon>
             </template>
           </v-list-item>
           <v-divider />
@@ -71,3 +74,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.scrollable::-webkit-scrollbar {
+  width: 5px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+   background-color: #e9e9e9;
+}
+.scrollable::-webkit-scrollbar-track {
+   background-color: #fff;
+}
+
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #e9e9e9 #fff;
+}
+
+</style>
