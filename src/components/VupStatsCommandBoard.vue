@@ -136,7 +136,6 @@ export default {
             INTERACT_WORD: interact_word,
             SUPER_CHAT_MESSAGE: super_chat_message,
           };
-          console.log(this.commands);
         })
         .catch((err) => {
           console.error(err);
