@@ -74,21 +74,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.scrollable::-webkit-scrollbar {
-  width: 5px;
-}
-.scrollable::-webkit-scrollbar-thumb {
-   background-color: #e9e9e9;
-}
-.scrollable::-webkit-scrollbar-track {
-   background-color: #fff;
-}
-
-.scrollable {
-  scrollbar-width: thin;
-  scrollbar-color: #e9e9e9 #fff;
-}
-
-</style>

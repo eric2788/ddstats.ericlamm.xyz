@@ -1,36 +1,25 @@
 <template>
   <v-container class="pa-5">
     <div align="center" justify="center">
-      <span align="center" class="text-h6">已记录的虚拟主播列表</span> <br />
+      <span align="center" class="text-h6">已记录的高亮行为列表</span> <br />
       <span class="text-h7">(经搜索共: {{ total }}个)</span>
     </div>
-    <v-row align="center" class="mt-10" justify="center">
+    <v-row align="center" class="mt-10 text-center" justify="center">
       <v-col cols="12" md="8" lg="5">
         <v-text-field
           v-model.lazy.trim="search"
-          label="搜索虚拟主播"
+          label="搜索关键词"
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
           @input="onInputSearchBar"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="5" lg="2">
-        <!-- any event of v-select is not working at vue3, so I decided to use watch -->
-        <v-select
-          v-model="orderBy"
-          :items="orderByList"
-          :rules="[(v) => !!v || 'Item is required']"
-          label="排序方式"
-          @change="searchVup"
-          required
-        ></v-select>
-      </v-col>
-      <v-col cols="12" md="3" lg="1">
+      <v-col cols="12" md="4" lg="2">
         <v-switch
-          v-model="desc"
-          :label="desc ? '反序' : '顺序'"
-          @change="searchVup"
+          v-model="showSelf"
+          label="显示自我行为"
+          @change="searchRecords"
         ></v-switch>
       </v-col>
     </v-row>
@@ -49,9 +38,9 @@
             <v-progress-circular indeterminate color="blue" />
           </v-row>
         </template>
-        <template v-else-if="users?.length > 0">
-          <template v-for="(vup, index) in users" :key="index">
-              <user-list-view :vup="vup"></user-list-view>
+        <template v-else-if="records?.length > 0">
+          <template v-for="(record, index) in records" :key="index">
+            <record-list-view :record="record"></record-list-view>
             <v-divider />
           </template>
           <div class="text-center pa-5">
@@ -72,64 +61,51 @@
 </template>
 
 <script>
-import api from "../api/user";
-import UserListView from '../components/UserListView.vue'
+import api from "../api/records";
+import RecordListView from "../components/RecordListView.vue";
 
 export default {
-  name: "UserView",
+  name: "RecordsView",
 
-
-  components: {UserListView},
+  components: {
+    RecordListView,
+  },
 
   data: () => ({
     search: "",
-    desc: true,
-    loading: true,
-
-    orderBy: "上次DD时间",
-    orderByList: ["总DD次数", "上次监听时间", "上次DD时间"],
-
-    orderMap: {
-      总DD次数: "dd_count",
-      上次监听时间: "last_listened_at",
-      上次DD时间: "last_behaviour_at",
-    },
-
-    users: [],
+    loading: false,
     page: 1,
     maxPage: 1,
     total: 0,
+    showSelf: true,
+
+    records: [],
   }),
 
   methods: {
-    searchVup() {
+    onUpdatePage(page) {
+      this.page = page;
+      this.searchRecords();
+    },
+
+    searchRecords() {
       this.loading = true;
       api
-        .searchUser(
-          this.search,
-          this.page,
-          this.orderMap[this.orderBy],
-          this.desc
-        )
-        .then((users) => {
-          this.users = users.list;
-          this.maxPage = users.max_page;
-          this.page = users.page;
-          this.total = users.total;
+        .getGlobalRecords(this.search, this.page, this.showSelf)
+        .then((records) => {
+          this.records = records.list;
+          this.maxPage = records.max_page;
+          this.page = records.page;
+          this.total = records.total;
         })
         .catch((err) => {
           console.error(err);
           this.$emit(
             "showError",
-            "获取虚拟主播列表时错误: " + err?.response?.data?.message ?? err
+            "获取高亮记录列表时错误: " + err?.response?.data?.message ?? err
           );
         })
         .finally(() => (this.loading = false));
-    },
-
-    onUpdatePage(page) {
-      this.page = page;
-      this.searchVup();
     },
 
     onInputSearchBar() {
@@ -139,21 +115,17 @@ export default {
         if (this.search != current) {
           return;
         }
-        this.page = 1
-        this.searchVup()
+        this.page = 1;
+        this.searchRecords();
       }, 700);
-    }
+    },
   },
 
   mounted() {
-    this.searchVup();
-  },
-
-  watch: {
-    orderBy() {
-      this.page = 1
-      this.searchVup()
-    },
+    this.searchRecords();
   },
 };
 </script>
+
+<style>
+</style>

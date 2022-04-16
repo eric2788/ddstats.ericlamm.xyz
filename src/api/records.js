@@ -1,17 +1,17 @@
 import api from './axios'
 
-async function getDDRecords(uid, limit = 5) {
-    const res = await api.get(`/records/${uid}`, { params: { limit } })
+
+async function getRecordsByType(uid, type = 'dd', limit = 15){
+    const res = await api.get(`/records/${uid}`, { params: { limit, type } })
     return res.data.data
 }
 
-
-async function getSelfRecords(uid, limit = 5) {
-    const res = await api.get(`/records/${uid}/self`, { params: { limit } })
+async function getGlobalRecords(q, page, showSelf = true, pageSize = 30){
+    const res = await api.get(`/records`, { params: {q, page, pageSize, showSelf}})
     return res.data.data
 }
 
 export default {
-    getDDRecords,
-    getSelfRecords
+    getRecordsByType,
+    getGlobalRecords
 }

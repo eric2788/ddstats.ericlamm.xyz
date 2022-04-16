@@ -140,7 +140,7 @@ export default {
           console.error(err);
 
           this.error =
-            err?.response?.data?.message ?? err?.response?.data ?? err;
+            err?.response?.data?.message ??  err;
 
           this.$emit("showError", "加载用户资讯时错误: " + this.error);
         })

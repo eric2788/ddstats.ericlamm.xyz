@@ -1,5 +1,5 @@
 <template>
-  <v-list theme="light" class="el-border" three-line height="420">
+  <v-list theme="light" class="el-border scrollable" three-line height="400">
     <template v-if="records && records.length > 0">
       <template v-for="(item, index) in records" :key="index">
         <v-list-item
