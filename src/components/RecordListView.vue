@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-5 d-flex wrap">
-    <v-col cols="2" sm=2 md="2" lg="2">
+    <v-col cols="4" sm=2 md="2" lg="2">
       <router-link :to="`/user/${record.uid}`" style="color: inherit">
         <v-avatar
           class="float-right"
@@ -10,7 +10,7 @@
         />
       </router-link>
     </v-col>
-    <v-col cols="10" sm=10 md="4" lg="4">
+    <v-col cols="8" sm=10 md="4" lg="4">
       <v-row class="pt-2">
         <span class="text-h7 mr-2">{{ record.display }}</span>
       </v-row>
