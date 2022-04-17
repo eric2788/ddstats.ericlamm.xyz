@@ -36,7 +36,7 @@
     </v-col>
     <v-col cols="12" sm="12" md="3" lg="2">
       <v-row class="text-center" justify="center">
-        <v-col cols="6" md="12">
+        <v-col cols="12" sm=6 md="12">
           <v-btn
             rounded="0"
             variant="text"
@@ -47,7 +47,7 @@
             查看直播间用户
           </v-btn>
         </v-col>
-        <v-col cols="6" md="12">
+        <v-col cols="12" sm=6 md="12">
           <v-btn
             rounded="0"
             variant="text"
