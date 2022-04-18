@@ -17,6 +17,7 @@
       </v-col>
       <v-col cols="12" md="4" lg="2">
         <v-switch
+          color="indigo"
           v-model="showSelf"
           label="显示自我行为"
           @change="searchRecords"
@@ -77,7 +78,7 @@ export default {
     page: 1,
     maxPage: 1,
     total: 0,
-    showSelf: true,
+    showSelf: false,
 
     records: [],
   }),

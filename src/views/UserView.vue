@@ -28,6 +28,7 @@
       </v-col>
       <v-col cols="12" md="3" lg="1">
         <v-switch
+          color="indigo"
           v-model="desc"
           :label="desc ? '反序' : '顺序'"
           @change="searchVup"
@@ -87,12 +88,13 @@ export default {
     loading: true,
 
     orderBy: "上次DD时间",
-    orderByList: ["总DD次数", "上次监听时间", "上次DD时间"],
+    orderByList: ["总DD次数", "上次监听时间", "上次DD时间", "初始监听时间"],
 
     orderMap: {
       总DD次数: "dd_count",
       上次监听时间: "last_listened_at",
       上次DD时间: "last_behaviour_at",
+      初始监听时间: "first_listen_at"
     },
 
     users: [],
