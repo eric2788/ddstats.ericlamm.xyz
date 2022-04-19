@@ -12,7 +12,7 @@
       <v-col cols="12" sm="12" md="4">
         <statistic-count-board
           icon="mdi-account-box-multiple"
-          title="已记录的虚拟主播数量:"
+          title="已记录的主播数量:"
           color="green"
           :value="stats.total_vup_recorded"
         ></statistic-count-board>

@@ -34,7 +34,7 @@
         <v-expansion-panel value="1" elevation=0 class="el-border">
           <v-expansion-panel-title>
             <v-icon large left>mdi-account-arrow-right</v-icon>
-            最常访问的虚拟主播
+            最常访问的主播
           </v-expansion-panel-title>
           <v-expansion-panel-text>
             <leader-board-list :users="top_dd_vups" class="elevation-0">

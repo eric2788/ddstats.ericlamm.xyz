@@ -1,14 +1,14 @@
 <template>
   <v-container class="pa-5">
     <div align="center" justify="center">
-      <span align="center" class="text-h6">已记录的虚拟主播列表</span> <br />
+      <span align="center" class="text-h6">已记录的主播列表</span> <br />
       <span class="text-h7">(经搜索共: {{ total }}个)</span>
     </div>
     <v-row align="center" class="mt-10" justify="center">
       <v-col cols="12" md="8" lg="5">
         <v-text-field
           v-model.lazy.trim="search"
-          label="搜索虚拟主播"
+          label="搜索主播"
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
@@ -123,7 +123,7 @@ export default {
           console.error(err);
           this.$emit(
             "showError",
-            "获取虚拟主播列表时错误: " + err?.response?.data?.message ?? err
+            "获取主播列表时错误: " + err?.response?.data?.message ?? err
           );
         })
         .finally(() => (this.loading = false));
