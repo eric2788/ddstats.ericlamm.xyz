@@ -75,7 +75,7 @@ export default {
       },
       {
         icon: "mdi-account-multiple",
-        text: "虛擬主播列表",
+        text: "主播列表",
         href: "/users",
       },
       {
