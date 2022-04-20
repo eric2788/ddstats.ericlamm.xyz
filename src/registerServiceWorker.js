@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import { register } from 'register-service-worker'
 
-console.debug(`node_env = ${process.env.NODE_ENV}`)
 if (process.env.NODE_ENV == 'production') {
-  console.debug(`trying to register service worker....`)
   register(`/service-worker.js`, {
     ready () {
       console.log(
