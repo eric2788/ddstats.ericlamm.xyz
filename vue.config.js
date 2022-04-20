@@ -21,6 +21,12 @@ module.exports = defineConfig({
   pwa: {
     name: 'DDStats 高亮用户统计',
     themeColor: '#409cff',
-    msTileColor: '#ffffff'
+    msTileColor: '#ffffff',
+    // configure the workbox plugin
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      // swSrc is required in InjectManifest mode.
+      swSrc: './service-worker.js',
+    }
   }
 })
