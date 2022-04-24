@@ -23,7 +23,11 @@
        <v-col cols=12 sm=4>
          <h3 class="mb-3">贡献</h3>
           <b>源码贡献:</b> 可以到 github 库提交 PR <br>
-          <b>直播间贡献:</b> 使用 <small>https://blive.ericlamm.xyz</small> 作为 vup_monitors 数据源就可以了
+          <b>直播间贡献:</b> 
+          <ul>
+            <li>使用 <small>https://blive.ericlamm.xyz</small> 作为 <span v-html="link('https://github.com/eric2788/vup_monitors', 'vup_monitors')"/> 的数据源</li>
+            <li>使用 <span v-html="link('https://github.com/eric2788/ddstats_client', 'ddstats_client')" /> 新增新的监控直播间</li>
+          </ul>
        </v-col>
 
       </v-row>
@@ -37,7 +41,9 @@
          <v-col cols=12 sm=4>
          <h3 class="mb-3">源码</h3>
           <b>前端:</b> <span v-html="link('https://github.com/eric2788/ddstats.ericlamm.xyz', 'ddstats.ericlamm.xyz')" />  <br> <img src="https://img.shields.io/github/stars/eric2788/ddstats.ericlamm.xyz?style=social"/> <br>
-          <b>后端:</b> <span v-html="link('https://github.com/eric2788/dd_vup_stats', 'dd_vup_stats')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/dd_vup_stats?style=social"/>
+          <b>后端:</b> <span v-html="link('https://github.com/eric2788/dd_vup_stats', 'dd_vup_stats')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/dd_vup_stats?style=social"/> <br>
+          <b>QQ机器人:</b> <span v-html="link('https://github.com/eric2788/vup_monitors', 'vup_monitors')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/vup_monitors?style=social"/> <br>
+          <b>直播间贡献:</b> <span v-html="link('https://github.com/eric2788/ddstats_client', 'ddstats_client')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/ddstats_client?style=social"/>
        </v-col>
       </v-row>
   </v-container>

@@ -11,7 +11,7 @@
 <h3 class="mb-3">贡献</h3>
 
 <b>源码贡献:</b> 可以到 github 库提交 PR <br>
-<b>直播间贡献:</b> 使用 <small>https://blive.ericlamm.xyz</small> 作为 vup_monitors 数据源就可以了
+<b>直播间贡献:</b> 使用 <small>https://blive.ericlamm.xyz</small> 作为 [vup_monitors](https://github.com/eric2788/vup_monitors) 数据源 或 使用 [这个程序](https://github.com/eric2788/ddstats_client) 新增监控直播间
 
 <h3 class="mb-3">声明</h3>
 
