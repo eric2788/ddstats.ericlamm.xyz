@@ -40,7 +40,7 @@
 
         <v-list-item
            v-if="installEvent"
-           title="安装手机应用程式"
+           title="安装手机应用"
            prepend-icon="mdi-cellphone-arrow-down-variant"
            @click="installApp"
         > </v-list-item>
