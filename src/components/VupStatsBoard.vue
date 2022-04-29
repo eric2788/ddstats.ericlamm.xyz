@@ -95,12 +95,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.$emit(
-            "showError",
-            "加载统计数据时错误: " + err?.response?.message ??
-              err?.response ??
-              err
-          );
+          this.$emit("error",{ msg: "加载统计数据时错误: ", err});
         })
         .finally(() => {
           this.loading = false;

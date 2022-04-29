@@ -121,10 +121,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.$emit(
-            "showError",
-            "获取主播列表时错误: " + err?.response?.data?.message ?? err
-          );
+          this.$emit("error",{ msg: "获取主播列表时错误: ", err});
         })
         .finally(() => (this.loading = false));
     },

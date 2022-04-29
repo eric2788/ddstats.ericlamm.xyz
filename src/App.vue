@@ -1,18 +1,25 @@
 <template>
   <v-app>
-    <!--v-app-bar app color="primary" density="compact">
+    <!-- v-app-bar app density="compact" v-if="isMobile" hide-on-scroll>
       <template v-slot:prepend>
-        <v-app-bar-nav-icon v-if="isMobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       </template>
       <v-app-bar-title>高亮用户统计</v-app-bar-title>
-    </v-app-bar-->
+    </v-app-bar -->
+    <v-btn
+      v-if="isMobile"
+      @click="drawer = !drawer"
+      icon="mdi-format-list-bulleted"
+      color="surface"
+      class="floating-action-btn"
+    ></v-btn>
     <v-navigation-drawer
       app
       v-model="drawer"
       elevation="5"
-      rail
+      :rail="!isMobile"
       expand-on-hover
-      permanent
+      :permanent="!isMobile"
     >
       <v-list>
         <v-list-item
@@ -30,6 +37,13 @@
             :prepend-icon="item.icon"
           />
         </template>
+
+        <v-list-item
+           v-if="installEvent"
+           title="安装手机应用程式"
+           prepend-icon="mdi-cellphone-arrow-down-variant"
+           @click="installApp"
+        > </v-list-item>
       </v-list>
       <template v-slot:append>
         <v-list>
@@ -43,7 +57,7 @@
       </template>
     </v-navigation-drawer>
     <v-main>
-      <router-view @show-error="(msg) => showSnackbar(msg)" />
+      <router-view @error="handleErr" @show-msg="(msg) => showSnackbar(msg)" />
     </v-main>
     <v-snackbar v-model="snackbar">
       {{ text }}
@@ -79,16 +93,16 @@ export default {
         href: "/users",
       },
       {
-        icon: 'mdi-account-clock',
-        text: '高亮行为记录',
-        href: '/records'
-      }
+        icon: "mdi-account-clock",
+        text: "高亮行为记录",
+        href: "/records",
+      },
     ],
-    drawer: true,
+    drawer: false,
     snackbar: false,
     text: "",
-
     mobileChangeObservers: {},
+    installEvent: null
   }),
 
   computed: {
@@ -101,6 +115,36 @@ export default {
     showSnackbar(text) {
       this.snackbar = true;
       this.text = text;
+    },
+
+    handleErr({ msg, err }) {
+      console.log(err.response);
+
+      let errMsg;
+
+      if (err?.response) {
+        errMsg =
+          err?.response?.data?.msg ??
+          err?.response?.data?.message ??
+          err?.response?.statusText;
+      } else {
+        errMsg = err?.message ?? err?.toString();
+      }
+      const message = `${msg}${errMsg}`;
+      this.showSnackbar(message);
+    },
+
+    installApp () {
+      if (this.installEvent) {
+        this.installEvent.prompt();
+        this.installEvent.userChoice.then(({ outcome }) => {
+          if (outcome === "accepted") {
+            this.showSnackbar("已成功安装 App");
+          }
+        });
+      } else {
+        this.showSnackbar("您的浏览器不支持 App 安装");
+      }
     },
   },
 
@@ -119,11 +163,20 @@ export default {
   },
 
   created() {
+
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
-      // Stash the event so it can be triggered later.
-      e.prompt();
+      this.installEvent = e
     });
+
+    const show = this.showSnackbar;
+    window.addEventListener("pwa:updated", () => {
+      show("有可用的新内容，请刷新页面");
+    });
+
+    if (!this.isMobile) {
+      this.drawer = true
+    }
   },
 };
 </script>
@@ -144,5 +197,12 @@ export default {
 }
 .el-border {
   border: 1px solid #e9e9e9;
+}
+.floating-action-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  transition: all 0.3s ease-out;
 }
 </style>

@@ -73,10 +73,7 @@ export default {
       })
       .catch((err) => {
         console.error(err);
-        this.$emit(
-          "showError",
-          "获取记录讯息时错误: " + err?.response?.data?.message ?? err
-        );
+        this.$emit("error",{ msg: "获取记录讯息时错误: ", err});
       });
   },
 };

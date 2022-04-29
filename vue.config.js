@@ -21,6 +21,9 @@ module.exports = defineConfig({
   pwa: {
     name: 'DDStats 高亮用户统计',
     themeColor: '#409cff',
-    msTileColor: '#ffffff'
+    msTileColor: '#ffffff',
+    workBoxOptions: {
+      skipWaiting: true,
+    }
   }
 })

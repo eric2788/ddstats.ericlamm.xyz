@@ -138,11 +138,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-
-          this.error =
-            err?.response?.data?.message ??  err;
-
-          this.$emit("showError", "加载用户资讯时错误: " + this.error);
+          this.$emit("error",{ msg: "加载用户资讯时错误: ", err});
         })
         .finally(() => (this.loading = false));
     },

@@ -20,12 +20,8 @@ if (process.env.NODE_ENV == 'production') {
     },
     updated (registration) {
       console.log('New content is available; please refresh.')
-      if (window.confirm("App 有新版本，确定更新？")) {
-        const worker = registration.waiting;
-        worker.postMessage({ type: "SKIP_WAITING" });
-        // refresh the page or trigger a refresh programatically!  
-        location.reload()
-      }
+      const event = new Event('pwa:updated')
+      window.dispatchEvent(event)
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
