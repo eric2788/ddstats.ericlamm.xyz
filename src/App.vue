@@ -12,6 +12,7 @@
       icon="mdi-format-list-bulleted"
       color="surface"
       class="floating-action-btn"
+      elevation="3"
     ></v-btn>
     <v-navigation-drawer
       app
@@ -41,10 +42,11 @@
         <v-list-item
            v-if="installEvent"
            title="安装手机应用"
-           prepend-icon="mdi-cellphone-arrow-down-variant"
+           prepend-icon="mdi-download"
            @click="installApp"
         > </v-list-item>
       </v-list>
+
       <template v-slot:append>
         <v-list>
           <v-list-item
@@ -202,7 +204,6 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
-  transition: all 0.3s ease-out;
+  z-index: 700;
 }
 </style>

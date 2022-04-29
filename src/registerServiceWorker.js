@@ -20,6 +20,8 @@ if (process.env.NODE_ENV == 'production') {
     },
     updated (registration) {
       console.log('New content is available; please refresh.')
+      const worker = registration.waiting;
+      worker.postMessage({ type: "SKIP_WAITING" });
       const event = new Event('pwa:updated')
       window.dispatchEvent(event)
     },
