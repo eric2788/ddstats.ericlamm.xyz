@@ -23,7 +23,7 @@ module.exports = defineConfig({
     themeColor: '#409cff',
     msTileColor: '#ffffff',
     workboxPluginMode: 'GenerateSW',
-    workBoxOptions: {
+    workboxOptions: {
       skipWaiting: true,
       runtimeCaching: [
         {
