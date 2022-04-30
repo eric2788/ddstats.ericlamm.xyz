@@ -40,7 +40,7 @@
               <v-expansion-panel-text>
                 <leader-board-list
                   :users="stats.most_dd_vups"
-                  subtitle="共访问过 %count% 个不同的直播间"
+                  subtitle="共超过 %count% 个"
                   class="elevation-0"
                 ></leader-board-list>
               </v-expansion-panel-text>
@@ -50,13 +50,12 @@
             <v-expansion-panel class="el-border" elevation="0" value="1-2">
               <v-expansion-panel-title>
                 <v-icon large left>mdi-alpha-d-box</v-icon>
-                进入直播间/往别的直播间发送SC/弹幕最多
+                进入直播间/发送SC/弹幕最多
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
                   class="elevation-0"
                   :users="stats.most_dd_behaviour_vups"
-                  subtitle="进入直播间/往别的直播间发送SC/弹幕共 %count% 次"
                 />
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -79,7 +78,6 @@
                 <leader-board-list
                   class="elevation-0"
                   :users="stats?.most_dd_behaviour_vup_commands?.DANMU_MSG"
-                  subtitle="往别的直播间发送弹幕共 %count% 次"
                 />
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -95,7 +93,6 @@
                   b
                   class="elevation-0"
                   :users="stats?.most_dd_behaviour_vup_commands?.INTERACT_WORD"
-                  subtitle="进入别人的直播间共 %count% 次"
                 />
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -112,7 +109,6 @@
                   :users="
                     stats?.most_dd_behaviour_vup_commands?.SUPER_CHAT_MESSAGE
                   "
-                  subtitle="往别人的直播间发送SC共 %count% 次"
                 />
               </v-expansion-panel-text>
             </v-expansion-panel>

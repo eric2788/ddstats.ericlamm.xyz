@@ -22,12 +22,17 @@ module.exports = defineConfig({
     name: 'DDStats 高亮用户统计',
     themeColor: '#409cff',
     msTileColor: '#ffffff',
+    workboxPluginMode: 'GenerateSW',
     workBoxOptions: {
       skipWaiting: true,
       runtimeCaching: [
         {
           // global stats only cache first
-          urlPattern: ({url}) => url.origin === process.env.VUE_APP_API_URL && url.pathname === '/stats',
+          urlPattern: ({url}) => {
+            console.debug(`CacheFirst: `)
+            console.debug(url)
+            return url.origin === process.env.VUE_APP_API_URL && url.pathname === '/stats'
+          },
           handler: 'CacheFirst',
           options: {
             cacheName: 'global-stats',
@@ -38,7 +43,11 @@ module.exports = defineConfig({
           },
         },
         {
-          urlPattern: ({url}) => url.origin === process.env.VUE_APP_API_URL,
+          urlPattern: ({url}) => {
+            console.debug(`NetworkFirst`)
+            console.debug(url)
+            return url.origin === process.env.VUE_APP_API_URL
+          },
           handler: 'NetworkFirst',
           options: {
             networkTimeoutSeconds: 10
