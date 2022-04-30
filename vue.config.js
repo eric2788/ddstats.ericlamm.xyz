@@ -35,8 +35,8 @@ module.exports = defineConfig({
           options: {
             cacheName: 'global-stats',
             expiration: {
-              maxEntries: 30,
-              maxAgeSeconds: 86400,
+              maxEntries: 10,
+              maxAgeSeconds: 60,
             },
           },
         },
