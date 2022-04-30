@@ -24,6 +24,27 @@ module.exports = defineConfig({
     msTileColor: '#ffffff',
     workBoxOptions: {
       skipWaiting: true,
+      runtimeCaching: [
+        {
+          // global stats only cache first
+          urlPattern: ({url}) => url.origin === process.env.VUE_APP_API_URL && url.pathname === '/stats',
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'global-stats',
+            expiration: {
+              maxEntries: 30,
+              maxAgeSeconds: 86400,
+            },
+          },
+        },
+        {
+          urlPattern: ({url}) => url.origin === process.env.VUE_APP_API_URL,
+          handler: 'NetworkFirst',
+          options: {
+            networkTimeoutSeconds: 30
+          },
+        }
+      ]
     }
   }
 })

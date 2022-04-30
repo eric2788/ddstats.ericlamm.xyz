@@ -7,7 +7,7 @@
       <v-app-bar-title>高亮用户统计</v-app-bar-title>
     </v-app-bar -->
     <v-btn
-      v-if="isMobile"
+      v-if="$vuetify.display.mdAndDown"
       @click="drawer = !drawer"
       icon="mdi-format-list-bulleted"
       color="surface"
@@ -18,9 +18,8 @@
       app
       v-model="drawer"
       elevation="5"
-      :rail="!isMobile"
+      :rail="!$vuetify.display.mdAndDown"
       expand-on-hover
-      :permanent="!isMobile"
     >
       <v-list>
         <v-list-item
@@ -157,7 +156,6 @@ export default {
   watch: {
     isMobile() {
       this.drawer = true;
-      console.log("mobile: " + this.$vuetify.display.smAndDown);
       Object.values(this.mobileChangeObservers).forEach((cb) =>
         cb(this.$vuetify.display.smAndDown)
       );
@@ -205,5 +203,15 @@ export default {
   bottom: 20px;
   right: 20px;
   z-index: 700;
+  animation: scale-in .3s ease-out;
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 </style>
