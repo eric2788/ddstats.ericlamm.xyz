@@ -40,7 +40,7 @@
               <v-expansion-panel-text>
                 <leader-board-list
                   :users="stats.most_dd_vups"
-                  subtitle="共超过 %count% 个"
+                  subtitle="共访问过 %count% 个不同的直播间"
                   class="elevation-0"
                 ></leader-board-list>
               </v-expansion-panel-text>
@@ -56,6 +56,7 @@
                 <leader-board-list
                   class="elevation-0"
                   :users="stats.most_dd_behaviour_vups"
+                  subtitle="所有行为合共 %count% 次"
                 />
               </v-expansion-panel-text>
             </v-expansion-panel>
