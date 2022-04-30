@@ -21,7 +21,7 @@ module.exports = defineConfig({
   pwa: {
     name: 'DDStats 高亮用户统计',
     themeColor: '#409cff',
-    assetsVersion: '1.0.2',
+    assetsVersion: '1.0.3',
     msTileColor: '#ffffff',
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
@@ -31,7 +31,7 @@ module.exports = defineConfig({
         {
           // global stats only cache first
           urlPattern: new RegExp(`^${process.env.VUE_APP_API_URL}/stats.*`),
-          handler: 'cacheFirst',
+          handler: 'CacheFirst',
           options: {
             cacheName: 'global-stats',
             expiration: {
@@ -42,7 +42,7 @@ module.exports = defineConfig({
         },
         {
           urlPattern: new RegExp(`^${process.env.VUE_APP_API_URL}.+`),
-          handler: 'networkFirst',
+          handler: 'NetworkFirst',
           options: {
             networkTimeoutSeconds: 10
           },
