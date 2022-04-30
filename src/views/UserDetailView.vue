@@ -51,10 +51,10 @@
           <v-row class="pt-1" align="center">
             <v-col cols="12" md="6" lg="4">
               <v-row class="pt-5">
-                <span class="text-caption" style="overflow-wrap: break-word;">个人简介</span>
+                <span class="text-caption">个人简介</span>
               </v-row>
               <v-row class="pt-4">
-                {{ vup.sign }}
+                <span style="overflow-wrap: break-word;"> {{ vup.sign }} </span>
               </v-row>
             </v-col>
             <v-col

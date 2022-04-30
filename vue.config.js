@@ -41,7 +41,7 @@ module.exports = defineConfig({
           urlPattern: ({url}) => url.origin === process.env.VUE_APP_API_URL,
           handler: 'NetworkFirst',
           options: {
-            networkTimeoutSeconds: 30
+            networkTimeoutSeconds: 10
           },
         }
       ]
