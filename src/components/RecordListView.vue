@@ -4,15 +4,10 @@
       <router-link :to="`/user/${record.uid}`" style="color: inherit">
         <v-avatar
           class="float-right"
+          :image="record.vup_face"
           rounded="0"
           size="86"
-        >
-          <v-img
-            :src="record.vup_face"
-            alt="Avatar"
-            lazy-src="/img/dd.png"
-          >
-        </v-avatar>
+        />
       </router-link>
     </v-col>
     <v-col cols="8" sm=10 md="4" lg="4">

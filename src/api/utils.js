@@ -16,6 +16,8 @@ export function convertRecords(records){
             record.created_at = new Date(record.created_at).toLocaleString()
         }
     }
+
+    return records
 }
 
 export function convertUsers(users){
@@ -33,6 +35,8 @@ export function convertUsers(users){
             vup.first_listen_at = new Date(vup.first_listen_at).toLocaleString()
         }
     }
+
+    return users
 }
 
 

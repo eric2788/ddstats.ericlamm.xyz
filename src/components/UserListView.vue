@@ -8,15 +8,10 @@
         >
           <v-avatar
             class="float-right"
+            :image="vup.face"
             rounded="0"
             size="86"
-          >
-            <v-img
-              :src="vup.face"
-              alt="Avatar"
-              lazy-src="/img/dd.png"
-            >
-          </v-avatar>
+          />
         </router-link>
       </slot>
     </v-col>
