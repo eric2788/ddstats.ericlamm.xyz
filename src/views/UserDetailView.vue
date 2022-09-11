@@ -101,6 +101,7 @@ import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 
 import userApi from "../api/user";
+import { convertUsers } from "../api/utils"
 
 export default {
   name: "UserDetailView",
@@ -136,6 +137,7 @@ export default {
         .getUser(this.$route.params.uid)
         .then((res) => {
           this.vup = res;
+          convertUsers([ this.vup ])
         })
         .catch((err) => {
           console.error(err);
