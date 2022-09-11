@@ -64,6 +64,7 @@
 <script>
 import api from "../api/records";
 import RecordListView from "../components/RecordListView.vue";
+import { convertRecords } from "../api/utils"
 
 export default {
   name: "RecordsView",
@@ -94,7 +95,7 @@ export default {
       api
         .getGlobalRecords(this.search, this.page, this.showSelf)
         .then((records) => {
-          this.records = records.list;
+          this.records = convertRecords(records.list);
           this.maxPage = records.max_page;
           this.page = records.page;
           this.total = records.total;

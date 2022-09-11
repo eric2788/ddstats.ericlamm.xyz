@@ -75,6 +75,7 @@
 <script>
 import api from "../api/user";
 import UserListView from '../components/UserListView.vue'
+import { convertUsers } from "../api/utils"
 
 export default {
   name: "UserView",
@@ -114,7 +115,7 @@ export default {
           this.desc
         )
         .then((users) => {
-          this.users = users.list;
+          this.users = convertUsers(users.list);
           this.maxPage = users.max_page;
           this.page = users.page;
           this.total = users.total;

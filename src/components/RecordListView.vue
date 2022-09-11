@@ -4,10 +4,15 @@
       <router-link :to="`/user/${record.uid}`" style="color: inherit">
         <v-avatar
           class="float-right"
-          :image="record.vup_face?.replace('http://', 'https://')"
           rounded="0"
           size="86"
-        />
+        >
+          <v-img
+            :src="record.vup_face"
+            alt="Avatar"
+            lazy-src="/img/dd.png"
+          >
+        </v-avatar>
       </router-link>
     </v-col>
     <v-col cols="8" sm=10 md="4" lg="4">
@@ -15,14 +20,14 @@
         <span class="text-h7 mr-2">{{ record.display }}</span>
       </v-row>
       <v-row class="pt-3 text-caption">
-        {{ new Date(record.created_at).toLocaleString() }}
+        {{ record.created_at }}
       </v-row>
     </v-col>
     <v-col cols="12" sm="12" md="3" lg="2">
       <v-row class="pt-2" justify="center" justify-md="start">
         <v-avatar
           v-if="record.image.Valid"
-          :image="record.image.String.replace('http://', 'https://')"
+          :image="record.image.String"
           rounded="0"
           size="86"
         />

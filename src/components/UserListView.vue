@@ -8,10 +8,15 @@
         >
           <v-avatar
             class="float-right"
-            :image="vup.face.replace('http://','https://')"
             rounded="0"
             size="86"
-          />
+          >
+            <v-img
+              :src="vup.face"
+              alt="Avatar"
+              lazy-src="/img/dd.png"
+            >
+          </v-avatar>
         </router-link>
       </slot>
     </v-col>
@@ -30,11 +35,7 @@
             <span class="text-caption">上次直播间监听时间</span>
           </v-row>
           <v-row class="pt-4">
-            {{
-              vup.listening
-                ? "现在"
-                : new Date(vup.last_listened_at).toLocaleString()
-            }}
+            {{ vup.listening }}
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">
@@ -42,11 +43,7 @@
             <span class="text-caption">上次DD时间</span>
           </v-row>
           <v-row class="pt-4">
-            {{
-              vup.last_behaviour_at
-                ? new Date(vup.last_behaviour_at).toLocaleString()
-                : "无"
-            }}
+            {{ vup.last_behaviour_at }}
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">
@@ -62,7 +59,7 @@
             <span class="text-caption">初始监听时间</span>
           </v-row>
           <v-row class="pt-4">
-            {{ new Date(vup.first_listen_at).toLocaleString() }}
+            {{ vup.first_listen_at }}
           </v-row>
         </v-col>
       </v-row>
