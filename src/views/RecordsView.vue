@@ -44,27 +44,25 @@
             <record-list-view :record="record"></record-list-view>
             <v-divider />
           </template>
-          <div class="text-center pa-5">
-            <v-pagination
-              v-model="page"
-              :length="maxPage"
-              text-color="black"
-              @update:modelValue="onUpdatePage"
-            ></v-pagination>
-          </div>
         </template>
         <template v-else>
           <v-row justify="center" align="center"> 没有记录 </v-row>
         </template>
       </v-col>
     </v-row>
+    <div v-if="!loading && records?.length > 0" class="text-center pa-5">
+      <v-btn rounded="0" variant="text" @click="toTop">
+        <v-icon left>mdi-arrow-up</v-icon>
+        返回頂部
+      </v-btn>
+    </div>
   </v-container>
 </template>
 
 <script>
 import api from "../api/records";
 import RecordListView from "../components/RecordListView.vue";
-import { convertRecords } from "../api/utils"
+import { convertRecords } from "../api/utils";
 
 export default {
   name: "RecordsView",
@@ -85,6 +83,11 @@ export default {
   }),
 
   methods: {
+
+    toTop(){
+      window.scroll({top: 0, behavior: 'smooth'})
+    },
+
     onUpdatePage(page) {
       this.page = page;
       this.searchRecords();
@@ -102,7 +105,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.$emit("error",{ msg: "获取高亮记录列表时错误: ", err});
+          this.$emit("error", { msg: "获取高亮记录列表时错误: ", err });
         })
         .finally(() => (this.loading = false));
     },

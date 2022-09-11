@@ -52,36 +52,33 @@
         </template>
         <template v-else-if="users?.length > 0">
           <template v-for="(vup, index) in users" :key="index">
-              <user-list-view :vup="vup"></user-list-view>
+            <user-list-view :vup="vup"></user-list-view>
             <v-divider />
           </template>
-          <div class="text-center pa-5">
-            <v-pagination
-              v-model="page"
-              :length="maxPage"
-              text-color="black"
-              @update:modelValue="onUpdatePage"
-            ></v-pagination>
-          </div>
         </template>
         <template v-else>
           <v-row justify="center" align="center"> 没有记录 </v-row>
         </template>
       </v-col>
     </v-row>
+    <div v-if="!loading && users?.length > 0" class="text-center pa-5">
+      <v-btn rounded="0" variant="text" @click="toTop">
+        <v-icon left>mdi-arrow-up</v-icon>
+        返回頂部
+      </v-btn>
+    </div>
   </v-container>
 </template>
 
 <script>
 import api from "../api/user";
-import UserListView from '../components/UserListView.vue'
-import { convertUsers } from "../api/utils"
+import UserListView from "../components/UserListView.vue";
+import { convertUsers } from "../api/utils";
 
 export default {
   name: "UserView",
 
-
-  components: {UserListView},
+  components: { UserListView },
 
   data: () => ({
     search: "",
@@ -95,7 +92,7 @@ export default {
       总DD次数: "dd_count",
       上次监听时间: "last_listened_at",
       上次DD时间: "last_behaviour_at",
-      初始监听时间: "first_listen_at"
+      初始监听时间: "first_listen_at",
     },
 
     users: [],
@@ -105,6 +102,11 @@ export default {
   }),
 
   methods: {
+
+    toTop(){
+      window.scroll({top: 0, behavior: 'smooth'})
+    },
+
     searchVup() {
       this.loading = true;
       api
@@ -122,7 +124,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.$emit("error",{ msg: "获取主播列表时错误: ", err});
+          this.$emit("error", { msg: "获取主播列表时错误: ", err });
         })
         .finally(() => (this.loading = false));
     },
@@ -139,10 +141,10 @@ export default {
         if (this.search != current) {
           return;
         }
-        this.page = 1
-        this.searchVup()
+        this.page = 1;
+        this.searchVup();
       }, 700);
-    }
+    },
   },
 
   mounted() {
@@ -151,8 +153,8 @@ export default {
 
   watch: {
     orderBy() {
-      this.page = 1
-      this.searchVup()
+      this.page = 1;
+      this.searchVup();
     },
   },
 };
