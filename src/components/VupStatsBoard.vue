@@ -14,13 +14,13 @@
           <tr>
             <td class="text-left">次数</td>
             <td class="text-center">
-              {{ vup.behaviours_count?.DANMU_MSG }} 次
+              {{ vup.behaviours_count?.DANMU_MSG?.count ?? vup.behaviours_count?.DANMU_MSG }} 次
             </td>
             <td class="text-center">
-              {{ vup.behaviours_count?.SUPER_CHAT_MESSAGE }} 次
+              {{ vup.behaviours_count?.SUPER_CHAT_MESSAGE?.count ?? vup.behaviours_count?.SUPER_CHAT_MESSAGE }} 次
             </td>
             <td class="text-center">
-              {{ vup.behaviours_count?.INTERACT_WORD }} 次
+              {{ vup.behaviours_count?.INTERACT_WORD?.count ?? vup.behaviours_count?.INTERACT_WORD }} 次
             </td>
           </tr>
         </tbody>
