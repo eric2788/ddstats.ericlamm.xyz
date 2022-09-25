@@ -261,9 +261,8 @@ export default {
   inject: ["observers"],
 
   mounted() {
-    this.fetchData().then(() =>
-      this.onMobilechanged(this.$vuetify.display.smAndDown)
-    );
+    this.onMobilechanged(this.$vuetify.display.smAndDown)
+    this.fetchData()
   },
 
   created() {

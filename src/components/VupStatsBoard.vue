@@ -7,7 +7,7 @@
   <h3 class="mt-5 mb-3">宏观排行统计</h3>
   <v-expansion-panels theme="light" multiple v-model="expands">
     <v-row>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md=6 lg="3">
         <v-table theme="light" class="elevation-0 el-border">
         <thead>
           <tr>
@@ -50,7 +50,7 @@
         </tbody>
       </v-table>
       </v-col>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="1" elevation=0 class="el-border">
           <v-expansion-panel-title>
             <v-icon large left>mdi-account-arrow-right</v-icon>
@@ -62,7 +62,7 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-col>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="2" elevation=0 class="el-border">
           <v-expansion-panel-title>
             <v-icon large left>mdi-account-arrow-left</v-icon>
@@ -74,7 +74,7 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-col>
-      <v-col cols="12" md="3">
+      <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="2" elevation=0 class="el-border">
           <v-expansion-panel-title>
             <v-icon large left>mdi-account-arrow-left</v-icon>
@@ -151,7 +151,8 @@ export default {
     },
   },
   mounted() {
-    this.fetchData().then(() => this.onMobileChanged(this.$vuetify.display.smAndDown));
+    this.onMobileChanged(this.$vuetify.display.smAndDown)
+    this.fetchData()
   },
 
   inject: ["observers"],

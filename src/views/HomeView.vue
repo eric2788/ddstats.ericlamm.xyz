@@ -262,10 +262,8 @@ export default {
   },
 
   mounted() {
-    this.fetchData().then(() =>
-      this.onMobileChanged(this.$vuetify.display.smAndDown)
-    );
-
+    this.onMobileChanged(this.$vuetify.display.smAndDown);
+    this.fetchData();
     this.refresh_interval = setInterval(this.fetchData, 1000 * 60);
   },
 
