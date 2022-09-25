@@ -6,8 +6,8 @@ async function getRecordsByType(uid, type = 'dd', limit = 15){
     return res.data.data
 }
 
-async function getGlobalRecords(q, page, showSelf = true, pageSize = 30){
-    const res = await api.get(`/records`, { params: {q, page, pageSize, showSelf}})
+async function getGlobalRecords(q, page, showSelf = true, command = '', pageSize = 30){
+    const res = await api.get(`/records`, { params: {q, page, pageSize, showSelf, command}})
     return res.data.data
 }
 

@@ -28,7 +28,7 @@ export function convertUsers(users){
             vup.face = toHttps(vup.face)
         }
 
-        vup.listening = vup.listening ? "现在" : new Date(vup.last_listened_at).toLocaleString()
+        vup.last_listened_at = vup.listening ? "现在" : new Date(vup.last_listened_at).toLocaleString()
         vup.last_behaviour_at = vup.last_behaviour_at ? new Date(vup.last_behaviour_at).toLocaleString() : "无"
 
         if (vup.first_listen_at) {

@@ -86,7 +86,6 @@ export default {
     loading: true,
 
     orderBy: "上次DD时间",
-    orderByList: ["总DD次数", "上次监听时间", "上次DD时间", "初始监听时间"],
 
     orderMap: {
       总DD次数: "dd_count",
@@ -145,6 +144,12 @@ export default {
         this.searchVup();
       }, 700);
     },
+  },
+
+  computed: {
+    orderByList(){ 
+      return Object.keys(this.orderMap)
+    }
   },
 
   mounted() {

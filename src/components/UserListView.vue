@@ -30,7 +30,7 @@
             <span class="text-caption">上次直播间监听时间</span>
           </v-row>
           <v-row class="pt-4">
-            {{ vup.listening }}
+            {{ vup.last_listened_at }}
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">
@@ -41,12 +41,20 @@
             {{ vup.last_behaviour_at }}
           </v-row>
         </v-col>
-        <v-col cols="12" sm="6" md="6" lg="3">
+        <v-col cols="12" sm="3" md="3" lg="1">
           <v-row class="pt-5">
             <span class="text-caption">总DD次数</span>
           </v-row>
           <v-row class="pt-4">
             {{ vup.dd_count }}
+          </v-row>
+        </v-col>
+        <v-col cols="12" sm="3" md="3" lg="1">
+          <v-row class="pt-5">
+            <span class="text-caption">总DD花费</span>
+          </v-row>
+          <v-row class="pt-4">
+            {{ vup.total_spent }} 元
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">

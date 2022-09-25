@@ -18,6 +18,9 @@ module.exports = defineConfig({
         return args
       })
   },
+  devServer: {
+    allowedHosts: ['serve.ericlamm.xyz'],
+  },
   pwa: {
     name: 'DDStats 高亮用户统计',
     themeColor: '#409cff',

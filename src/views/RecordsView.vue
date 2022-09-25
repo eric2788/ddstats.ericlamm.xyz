@@ -5,7 +5,7 @@
       <span class="text-h7">(经搜索共: {{ total }}个)</span>
     </div>
     <v-row align="center" class="mt-10 text-center" justify="center">
-      <v-col cols="12" md="8" lg="5">
+      <v-col cols="12" md="6" lg="5">
         <v-text-field
           v-model.lazy.trim="search"
           label="搜索关键词"
@@ -15,7 +15,17 @@
           @input="onInputSearchBar"
         ></v-text-field>
       </v-col>
-      <v-col cols="12" md="4" lg="2">
+      <v-col cols="12" md="3" lg="3">
+        <v-select
+          v-model="command"
+          :items="commands"
+          :rules="[(v) => !!v || 'Item is required']"
+          label="过滤行为"
+          @change="searchRecords"
+          required
+        ></v-select>
+      </v-col>
+      <v-col cols="12" md="3" lg="3">
         <v-switch
           color="indigo"
           v-model="showSelf"
@@ -80,6 +90,16 @@ export default {
     showSelf: false,
 
     records: [],
+    command: '所有',
+    commands_map: {
+      '所有': '',
+      '发送弹幕': 'DANMU_MSG',
+      '进入直播间': 'INTERACT_WORD',
+      '上舰': 'USER_TOAST_MSG',
+      '送礼': 'SEND_GIFT',
+      '发送SC': 'SUPER_CHAT_MESSAGE'
+    }
+
   }),
 
   methods: {
@@ -96,7 +116,7 @@ export default {
     searchRecords() {
       this.loading = true;
       api
-        .getGlobalRecords(this.search, this.page, this.showSelf)
+        .getGlobalRecords(this.search, this.page, this.showSelf, this.commands_map[this.command])
         .then((records) => {
           this.records = convertRecords(records.list);
           this.maxPage = records.max_page;
@@ -123,8 +143,21 @@ export default {
     },
   },
 
+  computed: {
+    commands(){
+      return Object.keys(this.commands_map)
+    }
+  },
+
   mounted() {
     this.searchRecords();
+  },
+
+  watch: {
+    command() {
+      this.page = 1;
+      this.searchRecords();
+    },
   },
 };
 </script>

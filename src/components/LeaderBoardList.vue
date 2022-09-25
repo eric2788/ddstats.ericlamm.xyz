@@ -10,7 +10,7 @@
             :height="i == 0 ? '100px' : 'auto'"
             :prepend-avatar="vup.face.replace('http://','https://')"
             :title="vup.name"
-            :subtitle="subtitle.replace('%count%', vup.count)"
+            :subtitle="subtitle(vup)"
             :to="`/user/${vup.uid}`"
           >
             <template v-if="i == 0">
@@ -55,8 +55,8 @@ export default {
       default: undefined,
     },
     subtitle: {
-      type: String,
-      default: "共 %count% 次",
+      type: Function,
+      default: (props) => `共 ${props.count} 次`,
     },
     subheader: String,
     bgColor: {
