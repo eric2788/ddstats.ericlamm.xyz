@@ -135,7 +135,7 @@
             <v-expansion-panel class="el-border" elevation="0" value="2-4">
               <v-expansion-panel-title>
                 <v-icon large left>mdi-cash-100</v-icon>
-                往别人的直播间发送SC总金额最多
+                往别人的直播间发送SC金额最多
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list

@@ -92,7 +92,7 @@ export default {
       上次监听时间: "last_listened_at",
       上次DD时间: "last_behaviour_at",
       初始监听时间: "first_listen_at",
-      总金额打赏: 'total_spent'
+      总金额打赏: "total_spent"
     },
 
     users: [],
