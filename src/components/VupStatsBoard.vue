@@ -75,13 +75,13 @@
         </v-expansion-panel>
       </v-col>
       <v-col cols="12" md=6 lg="3">
-        <v-expansion-panel value="2" elevation=0 class="el-border">
+        <v-expansion-panel value="3" elevation=0 class="el-border">
           <v-expansion-panel-title>
             <v-icon large left>mdi-account-arrow-left</v-icon>
             最高花费的主播
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <leader-board-list :users="top_spent_vups" class="elevation-0" :subtitle="(props) => `共花费 ${props.price} 元`">
+            <leader-board-list :users="top_spent_vups" class="elevation-0" :subtitle="(props) => `共花费 ${props.spent} 元`">
             </leader-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -146,7 +146,7 @@ export default {
       if (v) {
         this.expands = [];
       } else {
-        this.expands = ['1', '2'];
+        this.expands = ['1', '2', '3'];
       }
     },
   },

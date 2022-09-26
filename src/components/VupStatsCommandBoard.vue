@@ -127,6 +127,9 @@
               <leader-board-list
                 :users="super_chat_message?.top_guest_vups"
                 class="elevation-0"
+                :subtitle="
+                  (props) => `共 ${props.count} 次 (${props.price} 元)`
+                "
               />
             </v-expansion-panel-text>
           </v-expansion-panel>
@@ -141,6 +144,9 @@
               <leader-board-list
                 :users="user_toast_msg?.top_guest_vups"
                 class="elevation-0"
+                :subtitle="
+                  (props) => `共 ${props.count} 次 (${props.price} 元)`
+                "
               />
             </v-expansion-panel-text>
           </v-expansion-panel>
@@ -155,6 +161,9 @@
               <leader-board-list
                 :users="send_gift?.top_guest_vups"
                 class="elevation-0"
+                :subtitle="
+                  (props) => `共 ${props.count} 次 (${props.price} 元)`
+                "
               />
             </v-expansion-panel-text>
           </v-expansion-panel>
