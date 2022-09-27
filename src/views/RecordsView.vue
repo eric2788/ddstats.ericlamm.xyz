@@ -115,10 +115,11 @@ export default {
       this.searchRecords();
     },
 
-    searchRecords() {
+    searchRecords(search = this.search) {
       this.loading = true;
-      api
-        .getGlobalRecords(this.search, this.page, this.showSelf, this.commands_map[this.command])
+      console.debug(`searching: ${search}`)
+      return api
+        .getGlobalRecords(search, this.page, this.showSelf, this.commands_map[this.command])
         .then((records) => {
           this.records = convertRecords(records.list);
           this.maxPage = records.max_page;
@@ -139,14 +140,15 @@ export default {
         if (this.search != current) {
           return;
         }
-        this.page = 1;
-        this.searchRecords();
-      }, 700);
+        this.searchingQueue.push(this.search)
+        this.pollSearchs().then(() => console.log(`searching completed`))
+      }, 1000);
     },
 
     async pollSearchs(){
       if (this.searching) return
       this.searching = true
+      this.page = 1;
       while (this.searchingQueue.length > 0){
         const search = this.searchingQueue.shift()
         await this.searchRecords(search)

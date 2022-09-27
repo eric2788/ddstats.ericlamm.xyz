@@ -153,6 +153,7 @@ export default {
     async pollSearchs(){
       if (this.searching) return
       this.searching = true
+      this.page = 1
       while (this.searchingQueue.length > 0){
         const search = this.searchingQueue.shift()
         await this.searchVup(search)
