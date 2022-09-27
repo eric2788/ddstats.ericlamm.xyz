@@ -12,6 +12,7 @@
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
+          :disabled="disabled"
           @update:modelValue="onInputSearchBar"
         ></v-text-field>
       </v-col>
@@ -100,7 +101,9 @@ export default {
     maxPage: 1,
     total: 0,
     searchingQueue: [],
-    searching: false
+    searching: false,
+
+    disabled: false,
   }),
 
   methods: {
@@ -169,7 +172,8 @@ export default {
   },
 
   mounted() {
-    this.searchVup();
+    this.disabled = true
+    this.searchVup().finally(() => (this.disabled = false));
   },
 
   unmounted(){

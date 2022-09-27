@@ -77,7 +77,7 @@
       <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="3" elevation=0 class="el-border">
           <v-expansion-panel-title>
-            <v-icon large left>mdi-account-arrow-left</v-icon>
+            <v-icon large left>mdi-cash-multiple</v-icon>
             最高花费的主播
           </v-expansion-panel-title>
           <v-expansion-panel-text>
