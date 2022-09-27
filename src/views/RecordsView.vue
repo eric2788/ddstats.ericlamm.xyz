@@ -12,7 +12,6 @@
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
-          @input="onInputSearchBar"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" lg="3">
@@ -158,6 +157,10 @@ export default {
       this.page = 1;
       this.searchRecords();
     },
+    search(){
+      this.page = 1;
+      this.searchRecords();
+    }
   },
 };
 </script>
