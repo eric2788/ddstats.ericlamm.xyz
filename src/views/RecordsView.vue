@@ -12,6 +12,7 @@
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
+          @update:modelValue="onInputSearchBar"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="3" lg="3">
@@ -97,8 +98,10 @@ export default {
       '上舰': 'USER_TOAST_MSG',
       '送礼': 'SEND_GIFT',
       '发送SC': 'SUPER_CHAT_MESSAGE'
-    }
+    },
 
+    searchingQueue: [],
+    searching: false,
   }),
 
   methods: {
@@ -140,6 +143,16 @@ export default {
         this.searchRecords();
       }, 700);
     },
+
+    async pollSearchs(){
+      if (this.searching) return
+      this.searching = true
+      while (this.searchingQueue.length > 0){
+        const search = this.searchingQueue.shift()
+        await this.searchRecords(search)
+      }
+      this.searching = false
+    }
   },
 
   computed: {
@@ -154,10 +167,6 @@ export default {
 
   watch: {
     command() {
-      this.page = 1;
-      this.searchRecords();
-    },
-    search(){
       this.page = 1;
       this.searchRecords();
     }

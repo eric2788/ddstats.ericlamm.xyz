@@ -12,6 +12,7 @@
           variant="underlined"
           prepend-icon="mdi-account-search"
           :loading="loading"
+          @update:modelValue="onInputSearchBar"
         ></v-text-field>
       </v-col>
       <v-col cols="12" md="5" lg="2">
@@ -98,6 +99,8 @@ export default {
     page: 1,
     maxPage: 1,
     total: 0,
+    searchingQueue: [],
+    searching: false
   }),
 
   methods: {
@@ -106,11 +109,12 @@ export default {
       window.scroll({top: 0, behavior: 'smooth'})
     },
 
-    searchVup() {
+    searchVup(search = this.search) {
       this.loading = true;
+      console.debug(`searching: ${search}`)
       return api
         .searchUser(
-          this.search,
+          search,
           this.page,
           this.orderMap[this.orderBy],
           this.desc
@@ -140,10 +144,21 @@ export default {
         if (this.search != current) {
           return;
         }
-        this.page = 1;
-        this.searchVup()
+        this.searchingQueue.push(this.search)
+        this.pollSearchs().then(() => console.log(`searching completed`))
       }, 1000);
     },
+
+
+    async pollSearchs(){
+      if (this.searching) return
+      this.searching = true
+      while (this.searchingQueue.length > 0){
+        const search = this.searchingQueue.shift()
+        await this.searchVup(search)
+      }
+      this.searching = false
+    }
   },
 
   computed: {
@@ -156,14 +171,14 @@ export default {
     this.searchVup();
   },
 
+  unmounted(){
+    clearInterval(this.loop)
+  },
+
   watch: {
     orderBy() {
       this.page = 1;
       this.searchVup();
-    },
-    search(){
-      this.page = 1;
-      this.searchVup()
     }
   },
 };
