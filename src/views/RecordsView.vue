@@ -22,7 +22,7 @@
           :items="commands"
           :rules="[(v) => !!v || 'Item is required']"
           label="过滤行为"
-          @change="searchRecords"
+          @change="searchRecords()"
           required
         ></v-select>
       </v-col>
@@ -31,7 +31,7 @@
           color="indigo"
           v-model="showSelf"
           label="显示自我行为"
-          @change="searchRecords"
+          @change="searchRecords()"
         ></v-switch>
       </v-col>
     </v-row>

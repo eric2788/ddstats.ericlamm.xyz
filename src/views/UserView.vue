@@ -23,7 +23,7 @@
           :items="orderByList"
           :rules="[(v) => !!v || 'Item is required']"
           label="排序方式"
-          @change="searchVup"
+          @change="searchVup()"
           required
         ></v-select>
       </v-col>
@@ -32,7 +32,7 @@
           color="indigo"
           v-model="desc"
           :label="desc ? '反序' : '顺序'"
-          @change="searchVup"
+          @change="searchVup()"
         ></v-switch>
       </v-col>
     </v-row>
