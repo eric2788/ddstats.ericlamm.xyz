@@ -1,4 +1,10 @@
 {
+  "name": "DDStats",
+  "short_name": "DDStats",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000",
+  "description": "高亮用户统计",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

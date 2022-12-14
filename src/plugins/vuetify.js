@@ -1,6 +1,7 @@
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
+//import 'vuetify/styles'
+import '@/main.scss'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
@@ -12,6 +13,7 @@ export default createVuetify(
       defaultTheme: 'myTheme',
       themes: {
         myTheme: {
+          
           dark: false,
           colors: {
             background: '#FFFFFF',
