@@ -55,9 +55,6 @@ export default {
     link(url, title = undefined){
       return `<a href="${url}" target="_blank" style="color: inherit">${title ? title : url}</a>`;
     },
-    getImageUrl(path){
-      return require(`@/assets/${path}`);
-    },
   }
 }
 </script>
