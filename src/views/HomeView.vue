@@ -1,30 +1,16 @@
 <template>
   <v-container class="pa-5">
     <v-row class="pt-5 pb-5">
-      <v-col cols="12" sm="12" md="4">
-        <statistic-count-board
-          icon="mdi-account-supervisor-outline"
-          title="正在监听的房间数量:"
-          color="blue"
-          :value="stats.current_listening_count"
-        ></statistic-count-board>
-      </v-col>
-      <v-col cols="12" sm="12" md="4">
-        <statistic-count-board
-          icon="mdi-account-box-multiple"
-          title="已记录的主播数量:"
-          color="green"
-          :value="stats.total_vup_recorded"
-        ></statistic-count-board>
-      </v-col>
-      <v-col cols="12" sm="12" md="4">
-        <statistic-count-board
-          icon="mdi-alpha-d-box"
-          title="已记录的DD行为数量:"
-          color="purple"
-          :value="stats.total_dd_behaviours"
-        ></statistic-count-board>
-      </v-col>
+      <template v-for="(stat, index) in statistics_board" :key="index">
+        <v-col cols="12" sm="12" md="4">
+          <statistic-count-board
+            :icon="stat.icon"
+            :title="stat.title"
+            :color="stat.color"
+            :value="stats[stat.key]"
+          ></statistic-count-board>
+        </v-col>
+      </template>
     </v-row>
     <v-divider />
     <h3 class="mt-5 mb-3">DD风云榜</h3>
@@ -258,6 +244,28 @@ export default {
         "USER_TOAST_MSG",
         "SEND_GIFT",
       ],
+
+
+      statistics_board: [
+        {
+          icon: 'mdi-account-supervisor-outline',
+          title: '正在监听的房间数量:',
+          color: 'blue',
+          key: 'current_listening_count'
+        },
+        {
+          icon: 'mdi-account-box-multiple',
+          title: '已记录的主播数量:',
+          color: 'green',
+          key: 'total_vup_recorded'
+        },
+        {
+          icon: 'mdi-alpha-d-box',
+          title: '已记录的主播行为数量:',
+          color: 'purple',
+          key: 'total_dd_behaviours'
+        }
+      ]
     };
   },
 
@@ -268,9 +276,17 @@ export default {
   },
 
   methods: {
-    async fetchGlobal() {
-      const res = await api.getGlobalStats();
-      this.stats = res;
+
+    async fetchStats(type, key = "") {
+      const res = await api.getGlobalStats(type);
+      if (key) {
+        this.stats[key] = res;
+      } else {
+        this.stats = {
+          ...this.stats,
+          ...res,
+        };
+      }
     },
 
     async fetchCommand(command) {
@@ -285,7 +301,10 @@ export default {
 
     async fetchData() {
       const results = await Promise.allSettled([
-        this.fetchGlobal(),
+        this.fetchStats("count"),
+        this.fetchStats("dd", "most_dd_vups"),
+        this.fetchStats("behaviours", "most_dd_behaviour_vups"),
+        this.fetchStats("spent", "most_spent_vups"),
         ...this.commands_to_show.map(this.fetchCommand),
         ...this.commands_price_to_show.map(this.fetchCommandPrice),
       ]);

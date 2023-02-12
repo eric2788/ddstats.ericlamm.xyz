@@ -1,9 +1,11 @@
 import api from './axios'
 
-async function getGlobalStats(top = 10){
-    const res = await api.get('/stats', { params: { top } })
+
+async function getGlobalStats(type = "global", top = 10){
+    const res = await api.get('/stats', { params: { top, type } })
     return res.data.data
 }
+
 
 
 async function getCommandStatus(command, price = false, top = 10) {
