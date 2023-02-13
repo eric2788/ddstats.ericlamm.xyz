@@ -124,6 +124,13 @@ export default {
         text: "高亮行为记录",
         href: "/records",
       },
+      /*
+      {
+        icon: 'mdi-account-search',
+        text: 'B站用戶搜索',
+        href: '/watchers'
+      },
+      */
     ],
     drawer: false,
     snackbar: false,

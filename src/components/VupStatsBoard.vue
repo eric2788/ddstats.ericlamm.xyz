@@ -16,35 +16,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="text-left">发送弹幕</td>
-             <td class="text-center">
-              {{ showStats('DANMU_MSG') }}
-            </td>
-          </tr>
-          <tr>
-            <td class="text-left">发送SC</td>
+          <tr v-for="(behaviour, index) in behaviours_count" :key="index">
+            <td class="text-left">{{ behaviour.title }}</td>
             <td class="text-center">
-              {{ showStats('SUPER_CHAT_MESSAGE', true) }}
-            </td>
-          </tr>
-          <tr>
-            <td class="text-left">进入直播间</td>
-            <td class="text-center">
-              {{ showStats('INTERACT_WORD') }}
-            </td>
-          </tr>
-
-          <tr>
-            <td class="text-left">上舰</td>
-            <td class="text-center">
-              {{ showStats('USER_TOAST_MSG', true) }}
-            </td>
-          </tr>
-          <tr>
-            <td class="text-left">送礼</td>
-            <td class="text-center">
-              {{ showStats('SEND_GIFT', true) }}
+              {{ showStats(behaviour.command, behaviour.priced)}}
             </td>
           </tr>
         </tbody>
@@ -53,7 +28,7 @@
       <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="1" elevation=0 class="el-border">
           <v-expansion-panel-title>
-            <v-icon large left>mdi-account-arrow-right</v-icon>
+            <v-icon large left class="pr-3">mdi-account-arrow-right</v-icon>
             最常访问的主播
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -65,7 +40,7 @@
       <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="2" elevation=0 class="el-border">
           <v-expansion-panel-title>
-            <v-icon large left>mdi-account-arrow-left</v-icon>
+            <v-icon large left class="pr-3">mdi-account-arrow-left</v-icon>
             最常访问的来客
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -77,7 +52,7 @@
       <v-col cols="12" md=6 lg="3">
         <v-expansion-panel value="3" elevation=0 class="el-border">
           <v-expansion-panel-title>
-            <v-icon large left>mdi-cash-multiple</v-icon>
+            <v-icon large left class="pr-3">mdi-cash-multiple</v-icon>
             最高花费的主播
           </v-expansion-panel-title>
           <v-expansion-panel-text>
@@ -112,6 +87,35 @@ export default {
     top_spent_vups: null,
 
     expands: [],
+
+
+    behaviours_count: [
+      {
+        title: '发送弹幕',
+        command: 'DANMU_MSG',
+        priced: false
+      },
+      {
+        title: '发送SC',
+        command: 'SUPER_CHAT_MESSAGE',
+        priced: true
+      },
+      {
+        title: '进入直播间',
+        command: 'INTERACT_WORD',
+        priced: false
+      },
+      {
+        title: '上舰',
+        command: 'USER_TOAST_MSG',
+        priced: true
+      },
+      {
+        title: '送礼',
+        command: 'SEND_GIFT',
+        priced: true
+      }
+    ]
   }),
 
   created() {
@@ -131,7 +135,7 @@ export default {
         .then((res) => {
           this.top_dd_vups = res.top_dd_vups;
           this.top_guest_vups = res.top_guest_vups;
-          this.top_spent_vups = res.top_spent_vups;
+          this.top_spent_vups = res.top_spent_vups ?? []; // because it can be null
         })
         .catch((err) => {
           console.error(err);

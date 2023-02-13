@@ -7,18 +7,13 @@
       <template v-if="users.length > 0">
         <template v-for="(vup, i) in users" :key="i">
           <v-list-item
-            :height="i == 0 ? '100px' : 'auto'"
+            :height="i == 0 ? '100px' : '60px'"
             :prepend-avatar="vup.face.replace('http://','https://')"
             :title="vup.name"
             :subtitle="subtitle(vup)"
             :to="`/user/${vup.uid}`"
+            :append-icon="i == 0 ? 'mdi-crown' : `mdi-numeric-${i + 1}`"
           >
-            <template v-if="i == 0">
-              <v-icon large>mdi-crown</v-icon>
-            </template>
-            <template v-else>
-              <v-icon large>mdi-numeric-{{ i + 1 }}</v-icon>
-            </template>
           </v-list-item>
           <v-divider />
         </template>

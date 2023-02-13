@@ -11,7 +11,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="1" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-email-send</v-icon>
+              <v-icon large left class="pr-3">mdi-email-send</v-icon>
               最常向该主播发送弹幕
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -25,7 +25,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="2" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-location-exit</v-icon>
+              <v-icon large left class="pr-3">mdi-location-exit</v-icon>
               最常进入的直播间
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -39,7 +39,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="3" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-forum</v-icon>
+              <v-icon large left class="pr-3">mdi-forum</v-icon>
               最常向该主播发送SC
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -56,7 +56,7 @@
          <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="4" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-ferry</v-icon>
+              <v-icon large left class="pr-3">mdi-ferry</v-icon>
               最常向该主播上舰
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -73,7 +73,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="5" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-gift</v-icon>
+              <v-icon large left class="pr-3">mdi-gift</v-icon>
               最常向该主播打赏
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -92,7 +92,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="6" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-email-receive</v-icon>
+              <v-icon large left class="pr-3">mdi-email-receive</v-icon>
               最常发送弹幕的来客
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -106,7 +106,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="7" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-location-enter</v-icon>
+              <v-icon large left class="pr-3">mdi-location-enter</v-icon>
               最常进入的来客
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -120,7 +120,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="8" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-chat-alert</v-icon>
+              <v-icon large left class="pr-3">mdi-chat-alert</v-icon>
               最常发送SC的来客
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -137,7 +137,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="9" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-ship-wheel</v-icon>
+              <v-icon large left class="pr-3">mdi-ship-wheel</v-icon>
               最常上舰的来客
             </v-expansion-panel-title>
             <v-expansion-panel-text>
@@ -154,7 +154,7 @@
         <v-col cols="12" md="6" lg="3">
           <v-expansion-panel value="10" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left>mdi-gift-open</v-icon>
+              <v-icon large left class="pr-3">mdi-gift-open</v-icon>
               最常打赏的来客
             </v-expansion-panel-title>
             <v-expansion-panel-text>

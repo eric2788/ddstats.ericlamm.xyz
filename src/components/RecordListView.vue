@@ -14,7 +14,7 @@
       <v-row class="pt-2">
         <span class="text-h7 mr-2">{{ record.display }}</span>
       </v-row>
-      <v-row class="pt-3 text-caption">
+      <v-row class="text-caption">
         {{ record.created_at }}
       </v-row>
     </v-col>
