@@ -78,15 +78,35 @@
 
     <!--- extra content -->
     <v-slide-y-transition>
-      <v-snackbar multi-line timeout="30000" v-model="announcement" light vertical bottom left transition="slide-y-reverse-transition">
-      <v-card color="transparent" elevation="0" class="pa-0 ma-0">
-       <v-card-header>
-          意见征集
-          <v-spacer></v-spacer>
-          <v-btn color="grey-darken-1" size="x-small" icon variant="text" @click="announcement = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-       </v-card-header>
+      <v-snackbar
+        multi-line
+        timeout="30000"
+        v-model="announcement"
+        light
+        vertical
+        location="bottom left"
+        transition="slide-y-reverse-transition"
+      >
+        <v-card color="transparent" elevation="0" class="pa-0 ma-0">
+          <v-card-header>
+            <v-row>
+              <v-col cols="11">
+                意见征集
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="1">
+                <v-btn
+                color="grey-darken-1"
+                size="x-small"
+                icon
+                variant="text"
+                @click="announcement = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+              </v-col>
+            </v-row>
+          </v-card-header>
         <v-card-title>你觉得是否该解放仅限虚拟主播和闪电主播的记录限制？</v-card-title>
         <v-card-text>
           目前基于隐私问题限制了非虚拟主播和闪电主播的记录限制。现正考虑是否应该解放限制让记录行为扩大到普通B站用户。<br>
