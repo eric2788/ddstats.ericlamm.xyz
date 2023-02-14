@@ -87,8 +87,8 @@
       </user-list-view>
       <v-divider />
       <v-row class="pa-5" justify="center"> </v-row>
-      <vup-stats-board :vup="vup" />
-      <vup-stats-command-board :vup="vup" />
+      <vup-stats-board :boards="global_boards" :behaviours="global_behaviours" :fetcher="fetchUserStats"/>
+      <vup-stats-command-board :dd_boards="dd_boards" :guest_boards="guest_boards" :fetcher="fetchCommandStats" />
       <vup-records-board :vup="vup" />
     </template>
   </v-container>
@@ -100,8 +100,10 @@ import VupStatsBoard from "../components/VupStatsBoard.vue";
 import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 
-import userApi from "../api/user";
-import { convertUsers } from "../api/utils"
+import user from "../api/user";
+import stats from '../api/stats'
+
+import { convertUsers, toTitle } from "../api/utils"
 
 export default {
   name: "UserDetailView",
@@ -117,6 +119,107 @@ export default {
     vup: null,
     loading: true,
     error: "",
+
+    global_boards: [
+        {
+          title: "最常访问的主播",
+          icon: "mdi-account-arrow-right",
+          subtitle: undefined,
+          panel: "1",
+          command: 'top_dd_vups',
+        },
+        {
+          title: "最常访问的来客",
+          icon: "mdi-account-arrow-left",
+          subtitle: undefined,
+          panel: "2",
+          command: 'top_guest_vups',
+        },
+        {
+          title: "最高花费的主播",
+          icon: "mdi-cash-multiple",
+          subtitle: (props) => `共花费 ${props.spent} 元`,
+          panel: "3",
+          command: 'top_spent_vups',
+        },
+    ],
+
+    dd_boards: [
+        {
+          icon: 'mdi-email-send',
+          title: '最常向该主播发送弹幕',
+          command: 'DANMU_MSG',
+          display: undefined,
+          panel: '1'
+        },
+        {
+          icon: 'mdi-location-exit',
+          title: '最常进入的直播间',
+          command: 'INTERACT_WORD',
+          display: undefined,
+          panel: '2'
+        },
+        {
+          icon: 'mdi-forum',
+          title: '最常向该主播发送SC',
+          command: 'SUPER_CHAT_MESSAGE',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '3'
+        },
+        {
+          icon: 'mdi-ferry',
+          title: '最常向该主播上舰',
+          command: 'USER_TOAST_MSG',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '4'
+        },
+        {
+          icon: 'mdi-gift',
+          title: '最常向该主播打赏',
+          command: 'SEND_GIFT',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '5'
+        }
+    ],
+
+    guest_boards: [
+        {
+          icon: 'mdi-email-receive',
+          title: '最常发送弹幕的来客',
+          command: 'DANMU_MSG',
+          display: undefined,
+          panel: '6'
+        },
+        {
+          icon: 'mdi-location-enter',
+          title: '最常进入的来客',
+          command: 'INTERACT_WORD',
+          display: undefined,
+          panel: '7'
+        },
+        {
+          icon: 'mdi-chat-alert',
+          title: '最常发送SC的来客',
+          command: 'SUPER_CHAT_MESSAGE',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '8'
+        },
+        {
+          icon: 'mdi-ship-wheel',
+          title: '最常上舰的来客',
+          command: 'USER_TOAST_MSG',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '9'
+        },
+        {
+          icon: 'mdi-gift-open',
+          title: '最常打赏的来客',
+          command: 'SEND_GIFT',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '10'
+        }
+    ],
+
   }),
 
   created() {
@@ -130,10 +233,21 @@ export default {
     );
   },
 
+  computed: {
+    global_behaviours() {
+      return this.vup?.behaviours_count?.map(b => {
+        return {
+          ...b,
+          title: toTitle(b.command),
+        }
+      })
+    }
+  },
+
   methods: {
     fetchData() {
       this.loading = true;
-      userApi
+      user
         .getUser(this.$route.params.uid)
         .then((res) => {
           this.vup = res;
@@ -146,6 +260,14 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
+
+    async fetchUserStats() {
+      return await stats.getUserStats(this.vup.uid)
+    },
+
+    async fetchCommandStats(command, price) {
+      return await stats.getUserStatsByCommand(this.vup.uid, command, price)
+    }
   }
 };
 </script>

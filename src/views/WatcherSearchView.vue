@@ -69,7 +69,7 @@ export default {
   },
 
   mounted() {
-    api.getWatcherStats('count').then(r => {
+    api.getGlobalStats('count').then(r => {
       this.total = r
     })
   }

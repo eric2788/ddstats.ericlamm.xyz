@@ -39,10 +39,22 @@ export function convertUsers(users){
     return users
 }
 
-
 function toHttps(url){
     if (url.startsWith('http://')) {
         return url.replace('http://', 'https://')
     }
     return url
+}
+
+const command_names =  {
+    'DANMU_MSG': '发送弹幕',
+    'SUPER_CHAT_MESSAGE': '发送SC',
+    'INTERACT_WORD': '进入直播间',
+    'SEND_GIFT': '送礼',
+    'USER_TOAST_MSG': '上舰',
+}
+
+
+export function toTitle(command) {
+    return command_names[command] ?? command
 }

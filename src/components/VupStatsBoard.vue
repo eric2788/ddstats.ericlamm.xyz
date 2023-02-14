@@ -1,38 +1,36 @@
 <template>
   <v-row justify="center">
-    <v-col cols="12" md="6" lg="6">
-      
-    </v-col>
+    <v-col cols="12" md="6" lg="6"> </v-col>
   </v-row>
   <h3 class="mt-5 mb-3">宏观排行统计</h3>
   <v-expansion-panels theme="light" multiple v-model="expands">
     <v-row>
-      <v-col cols="12" md=6 lg="3">
+      <v-col cols="12" md="6" lg="3">
         <v-table theme="light" class="elevation-0 el-border">
-        <thead>
-          <tr>
-            <th class="text-left">行为类型</th>
-            <th class="text-center">行为次数</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(behaviour, index) in behaviours_count" :key="index">
-            <td class="text-left">{{ behaviour.title }}</td>
-            <td class="text-center">
-              {{ showStats(behaviour.command, behaviour.priced)}}
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+          <thead>
+            <tr>
+              <th class="text-left">行为类型</th>
+              <th class="text-center">行为次数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(behaviour, index) in behaviours" :key="index">
+              <td class="text-left">{{ behaviour.title }}</td>
+              <td class="text-center">
+                {{ showStats(behaviour) }}
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
       </v-col>
-      <v-col cols="12" md=6 lg="3" v-for="(b, i) in stats_board" :key="i">
-        <v-expansion-panel :value="b.panel" elevation=0 class="el-border">
+      <v-col cols="12" md="6" lg="3" v-for="(b, i) in boards" :key="i">
+        <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
           <v-expansion-panel-title>
             <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
             {{ b.title }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <leader-board-list :users="b.command" class="elevation-0" :subtitle="b.subtitle">
+            <leader-board-list :users="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
             </leader-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -42,14 +40,51 @@
 </template>
 
 <script>
-import api from "../api/stats";
 import LeaderBoardList from "./LeaderBoardList.vue";
 
 export default {
   name: "VupStatsBoard",
 
   props: {
-    vup: Object,
+    boards: {
+      /* definition
+      {
+          title: "最常访问的主播", // String
+          icon: "mdi-account-arrow-right", // String
+          subtitle: undefined, // Function
+          panel: "1", // String
+          command: 'top_dd_vups', // String
+        }
+      */
+      type: Array,
+      default: () => [],
+    },
+
+    behaviours: {
+      /* definition
+      {
+        title: '送礼' // String
+        price: 5 // Number
+        count: 2 // Number
+      }
+      */
+      type: Array,
+      default: () => [],
+    },
+
+    fetcher: {
+      type: Function,
+      required: true,
+      default: async () => {
+        // simulate getting data after 3 seconds
+        await new Promise((res,) => setTimeout(res, 3000))
+        return {
+          top_dd_vups: [],
+          top_guest_vups: [],
+          top_spent_vups: [],
+        }
+      }
+    },
   },
 
   components: {
@@ -58,64 +93,8 @@ export default {
 
   data: () => ({
     loading: false,
-    top_dd_vups: null,
-    top_guest_vups: null,
-    top_spent_vups: null,
-
+    response: {},
     expands: [],
-
-
-    behaviours_count: [
-      {
-        title: '发送弹幕',
-        command: 'DANMU_MSG',
-        priced: false
-      },
-      {
-        title: '发送SC',
-        command: 'SUPER_CHAT_MESSAGE',
-        priced: true
-      },
-      {
-        title: '进入直播间',
-        command: 'INTERACT_WORD',
-        priced: false
-      },
-      {
-        title: '上舰',
-        command: 'USER_TOAST_MSG',
-        priced: true
-      },
-      {
-        title: '送礼',
-        command: 'SEND_GIFT',
-        priced: true
-      }
-    ],
-
-    stats_board: [
-      {
-        title: '最常访问的主播',
-        icon: 'mdi-account-arrow-right',
-        command: 'top_dd_vups',
-        subtitle: undefined,
-        panel: '1'
-      },
-      {
-        title: '最常访问的来客',
-        icon: 'mdi-account-arrow-left',
-        command: 'top_guest_vups',
-        subtitle: undefined,
-        panel: '2'
-      },
-      {
-        title: '最高花费的主播',
-        icon: 'mdi-cash-multiple',
-        command: 'top_spent_vups',
-        subtitle: (props) => `共花费 ${props.spent} 元`,
-        panel: '3'
-      }
-    ]
   }),
 
   created() {
@@ -123,23 +102,16 @@ export default {
   },
 
   methods: {
-
-    showStats(command, showPrice = false){
-      const stats = this.vup?.behaviours_count[command]
-      return `${stats?.count} 次` + (showPrice ? ` (${stats?.price} 元)` : '')
+    showStats(stats) {
+      return `${stats?.count} 次` + (stats.price > 0 ? ` (${stats.price} 元)` : "");
     },
 
     fetchData() {
-      return api
-        .getUserStats(this.vup.uid)
-        .then((res) => {
-          this.top_dd_vups = res.top_dd_vups;
-          this.top_guest_vups = res.top_guest_vups;
-          this.top_spent_vups = res.top_spent_vups ?? []; // because it can be null
-        })
+      this.loading = true
+      return this.fetcher()
         .catch((err) => {
           console.error(err);
-          this.$emit("error",{ msg: "加载统计数据时错误: ", err});
+          this.$emit("error", { msg: "加载统计数据时错误: ", err });
         })
         .finally(() => {
           this.loading = false;
@@ -150,13 +122,13 @@ export default {
       if (v) {
         this.expands = [];
       } else {
-        this.expands = ['1', '2', '3'];
+        this.expands = this.boards.map(b => b.panel);
       }
     },
   },
   mounted() {
-    this.onMobileChanged(this.$vuetify.display.smAndDown)
-    this.fetchData()
+    this.onMobileChanged(this.$vuetify.display.smAndDown);
+    this.fetchData();
   },
 
   inject: ["observers"],
@@ -164,4 +136,5 @@ export default {
 </script>
 
 <style>
+
 </style>
