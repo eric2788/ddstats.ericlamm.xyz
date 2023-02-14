@@ -1,32 +1,10 @@
 <template>
   <h3 class="mt-5 mb-3">最近的记录</h3>
   <v-row>
-    <v-col cols="12" sm=6 md="4">
-      <template v-if="dd_records">
-        <h4 class="mb-3">DD 行为记录 (最近 {{ top }} 条)</h4>
-        <record-board-list :records="dd_records" />
-      </template>
-      <template v-else>
-        <div align="center" justify="center">
-          <v-progress-circular indeterminate color="blue" />
-        </div>
-      </template>
-    </v-col>
-    <v-col cols="12" sm=6 md="4">
-      <template v-if="guest_records">
-        <h4 class="mb-3">来客行为记录 (最近 {{ top }} 条)</h4>
-        <record-board-list :records="guest_records" />
-      </template>
-      <template v-else>
-        <div align="center" justify="center">
-          <v-progress-circular indeterminate color="blue" />
-        </div>
-      </template>
-    </v-col>
-    <v-col cols="12" sm=6 md="4">
-      <template v-if="self_records">
-        <h4 class="mb-3">自我行为记录 (最近 {{ top }} 条)</h4>
-        <record-board-list :records="self_records" />
+    <v-col cols="12" sm=6 md="4" v-for="(r, i) in records" :key="i">
+      <template v-if="r.records">
+        <h4 class="mb-3">{{ r.title }} (最近 {{ top }} 条)</h4>
+        <record-board-list :records="r.records" />
       </template>
       <template v-else>
         <div align="center" justify="center">
@@ -58,6 +36,25 @@ export default {
     guest_records: null,
     top: 15,
   }),
+
+  computed: {
+    records() {
+      return [
+        {
+          title: "DD 行为记录",
+          records: this.dd_records
+        },
+        {
+          title: "来客行为记录",
+          records: this.guest_records
+        },
+        {
+          title: "自我行为记录",
+          records: this.self_records
+        }
+      ]
+    }
+  },
 
   methods: {},
 

@@ -75,61 +75,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <!--- extra content -->
-    <v-slide-y-transition>
-      <v-snackbar
-        multi-line
-        timeout="30000"
-        v-model="announcement"
-        light
-        vertical
-        location="bottom left"
-        transition="slide-y-reverse-transition"
-      >
-        <v-card color="transparent" elevation="0" class="pa-0 ma-0">
-          <v-card-header>
-            <v-row>
-              <v-col cols="11">
-                意见征集
-              </v-col>
-              <v-spacer></v-spacer>
-              <v-col cols="1">
-                <v-btn
-                color="grey-darken-1"
-                size="x-small"
-                icon
-                variant="text"
-                @click="announcement = false"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-header>
-          <v-card-title
-            >你觉得是否该解放仅限虚拟主播和闪电主播的记录限制？</v-card-title
-          >
-          <v-card-text>
-            目前基于隐私问题限制了非虚拟主播和闪电主播的记录限制。现正考虑是否应该解放限制让记录行为扩大到普通B站用户。<br />
-            通过后，直播间监控将基于目前仅限虚拟主播及闪电主播作为记录，但行为记录则会概括全体B站用户，并且进行统计化排行及分析。
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn variant="text" color="red" @click="noReminder()"
-              >不再提醒</v-btn
-            >
-            <v-btn
-              variant="text"
-              color="green"
-              href="https://github.com/eric2788/ddstats.ericlamm.xyz/discussions/3"
-              target="_blank"
-              >参与投票</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-snackbar>
-    </v-slide-y-transition>
   </v-app>
 </template>
 
@@ -165,7 +110,6 @@ export default {
     text: "",
     mobileChangeObservers: {},
     installEvent: null,
-    announcement: false,
   }),
 
   computed: {
@@ -195,11 +139,6 @@ export default {
       }
       const message = `${msg}${errMsg}`;
       this.showSnackbar(message);
-    },
-
-    noReminder() {
-      this.announcement = false;
-      window.localStorage.setItem("no-reminder", "true");
     },
 
     installApp() {
@@ -242,12 +181,6 @@ export default {
 
     if (!this.isMobile) {
       this.drawer = true;
-    }
-
-    if (window.localStorage.getItem("no-reminder") !== "true") {
-      setTimeout(() => (this.announcement = true), 1000);
-    } else {
-      console.debug("skipped reminder");
     }
   },
 };
