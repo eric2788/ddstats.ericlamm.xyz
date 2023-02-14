@@ -25,38 +25,14 @@
         </tbody>
       </v-table>
       </v-col>
-      <v-col cols="12" md=6 lg="3">
-        <v-expansion-panel value="1" elevation=0 class="el-border">
+      <v-col cols="12" md=6 lg="3" v-for="(b, i) in stats_board" :key="i">
+        <v-expansion-panel :value="b.panel" elevation=0 class="el-border">
           <v-expansion-panel-title>
-            <v-icon large left class="pr-3">mdi-account-arrow-right</v-icon>
-            最常访问的主播
+            <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
+            {{ b.title }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <leader-board-list :users="top_dd_vups" class="elevation-0">
-            </leader-board-list>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-col>
-      <v-col cols="12" md=6 lg="3">
-        <v-expansion-panel value="2" elevation=0 class="el-border">
-          <v-expansion-panel-title>
-            <v-icon large left class="pr-3">mdi-account-arrow-left</v-icon>
-            最常访问的来客
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <leader-board-list :users="top_guest_vups" class="elevation-0">
-            </leader-board-list>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-col>
-      <v-col cols="12" md=6 lg="3">
-        <v-expansion-panel value="3" elevation=0 class="el-border">
-          <v-expansion-panel-title>
-            <v-icon large left class="pr-3">mdi-cash-multiple</v-icon>
-            最高花费的主播
-          </v-expansion-panel-title>
-          <v-expansion-panel-text>
-            <leader-board-list :users="top_spent_vups" class="elevation-0" :subtitle="(props) => `共花费 ${props.spent} 元`">
+            <leader-board-list :users="b.command" class="elevation-0" :subtitle="b.subtitle">
             </leader-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -114,6 +90,30 @@ export default {
         title: '送礼',
         command: 'SEND_GIFT',
         priced: true
+      }
+    ],
+
+    stats_board: [
+      {
+        title: '最常访问的主播',
+        icon: 'mdi-account-arrow-right',
+        command: 'top_dd_vups',
+        subtitle: undefined,
+        panel: '1'
+      },
+      {
+        title: '最常访问的来客',
+        icon: 'mdi-account-arrow-left',
+        command: 'top_guest_vups',
+        subtitle: undefined,
+        panel: '2'
+      },
+      {
+        title: '最高花费的主播',
+        icon: 'mdi-cash-multiple',
+        command: 'top_spent_vups',
+        subtitle: (props) => `共花费 ${props.spent} 元`,
+        panel: '3'
       }
     ]
   }),
