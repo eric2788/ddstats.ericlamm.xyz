@@ -21,6 +21,11 @@ async function getWatcher(uid) {
     return res.data.data
 }
 
+async function getWatcherStats(uid) {
+    const res = await api.get(`watcher/stats/${uid}`)
+    return res.data.data
+}
+
 async function getWatcherStatsByCommand(uid, command, price = false, limit = 10){
     const res = await api.get(`/watcher/stats/${uid}/${command}`, { params: { limit, price }})
     return res.data.data
@@ -29,6 +34,7 @@ async function getWatcherStatsByCommand(uid, command, price = false, limit = 10)
 export default {
     getGlobalStats,
     getCommandStatus,
+    getWatcherStats,
     getWatcherRecords,
     getWatcher,
     getWatcherStatsByCommand

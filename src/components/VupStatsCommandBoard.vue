@@ -7,8 +7,8 @@
     v-model="expands"
   >
     <v-container class="pa-0">
-      <v-row v-if="dd_board?.length">
-        <v-col cols="12" md="6" lg="3" v-for="(b, i) in dd_board" :key="i">
+      <v-row v-if="dd_boards?.length">
+        <v-col cols="12" md="6" :lg="dd_col" v-for="(b, i) in dd_boards" :key="i">
           <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
               <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -25,8 +25,8 @@
           </v-expansion-panel>
         </v-col>
       </v-row>
-      <v-row v-if="guest_board?.length">
-        <v-col cols="12" md="6" lg="3" v-for="(b, i) in guest_board" :key="i">
+      <v-row v-if="guest_boards?.length">
+        <v-col cols="12" md="6" :lg="guest_col" v-for="(b, i) in guest_boards" :key="i">
           <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
               <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -110,6 +110,16 @@ export default {
     priced: new Set(),
   }),
 
+  computed: {
+    dd_col() {
+      return Math.ceil(12/this.dd_boards.length)
+    },
+
+    guest_col() {
+      return Math.ceil(12/this.guest_boards.length)
+    }
+  },
+
   methods: {
     async switchPriced(command){
       if (this.priced.has(command)){
@@ -133,7 +143,7 @@ export default {
 
     async fetchData() {
       const commandsToFetch = [...new Set(this.dd_boards.concat(this.guest_boards).map(b => b.command))]
-      return Promise.allSettled(commandsToFetch.map(this.fetchStats))
+      return Promise.allSettled(commandsToFetch.map(b => this.fetchStats(b)))
         .then((results) => {
           for (const result of results) {
             if (result.status === "rejected") {

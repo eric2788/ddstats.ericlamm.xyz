@@ -1,12 +1,12 @@
 <template>
   <v-container class="pa-5">
-    <v-sheet class="pa-10" color="transparent" height="200"></v-sheet>
+    <v-sheet class="pa-10" color="transparent" height="300"></v-sheet>
     <div align="center" justify="center">
       <span align="center" class="text-h6">搜索B站用戶的高亮统计</span> <br />
       <span v-if="total > 0" class="text-h7">(已收录行为数量共: {{ total }}个)</span>
     </div>
     <v-form ref="form" v-model="form" @submit.prevent="onSubmit">
-    <v-row align="center" class="mt-10 text-center" justify="center">
+    <v-row align="center" class="mt-3 text-center" justify="center">
       <v-col cols="11" md="6" lg="4">
         <v-text-field
           ref="input"
@@ -42,18 +42,24 @@ export default {
   methods: {
     onSubmit(){
         if (!this.$refs.form.validate() || !this.form) return
-        console.log('searching....')
         this.$refs.input.blur()
         this.loading = true
-        setTimeout(() => {
-            this.loading = false
-            this.showError('用户不存在')
-        }, 2000)
+        const uid = this.search
+        this.$router.push(`/watcher/${uid}`).then(r => {
+          if (r) {
+            console.debug(r)
+            this.showError(r.message)
+          }
+        }).catch(err => {
+          console.error(err)
+          this.showError(err?.response?.data?.message ?? err.statusText)
+          this.$emit('error', { msg: "加载用户资讯时错误: ", err })
+        }).finally(() => this.loading = false)
     },
 
     showError(error){
         this.errorMessage = error
-        this.$refs.input.validate()
+        this.$refs.input?.validate()
         setTimeout(() => this.errorMessage = '', 1000)
     },
 
@@ -69,9 +75,6 @@ export default {
   },
 
   mounted() {
-    api.getGlobalStats('count').then(r => {
-      this.total = r
-    })
   }
 };
 </script>

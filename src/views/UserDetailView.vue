@@ -53,7 +53,7 @@
               <v-row class="pt-5">
                 <span class="text-caption">个人简介</span>
               </v-row>
-              <v-row class="pt-4">
+              <v-row>
                 <span style="overflow-wrap: break-word;"> {{ vup.sign }} </span>
               </v-row>
             </v-col>
@@ -68,7 +68,7 @@
               <v-row class="pt-5">
                 <span class="text-caption">直播间传送门</span>
               </v-row>
-              <v-row class="pt-4">
+              <v-row>
                 <a
                   style="color: inherit"
                   :href="`https://live.bilibili.com/${vup.room_id}`"
@@ -235,7 +235,21 @@ export default {
 
   computed: {
     global_behaviours() {
-      return this.vup?.behaviours_count?.map(b => {
+
+      // TODO: remove this after the backend response is changed to array
+      let behaviours = []
+
+      if (!(this.vup?.behaviours_count instanceof Array)) {
+        behaviours = Object.values(this.vup?.behaviours_count ?? {})
+      } else {
+        behaviours = this.vup?.behaviours_count
+      }
+
+      //
+
+      console.debug('global_behaviours: ', behaviours)
+
+      return behaviours.map(b => {
         return {
           ...b,
           title: toTitle(b.command),

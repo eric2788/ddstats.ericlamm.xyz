@@ -5,7 +5,7 @@
   <h3 class="mt-5 mb-3">宏观排行统计</h3>
   <v-expansion-panels theme="light" multiple v-model="expands">
     <v-row>
-      <v-col cols="12" md="6" lg="3">
+      <v-col cols="12" md="6" :lg="lgCols">
         <v-table theme="light" class="elevation-0 el-border">
           <thead>
             <tr>
@@ -23,7 +23,7 @@
           </tbody>
         </v-table>
       </v-col>
-      <v-col cols="12" md="6" lg="3" v-for="(b, i) in boards" :key="i">
+      <v-col cols="12" md="6" :lg="lgCols" v-for="(b, i) in boards" :key="i">
         <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
           <v-expansion-panel-title>
             <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -101,6 +101,12 @@ export default {
     this.observers[this.$options.name] = this.onMobileChanged;
   },
 
+  computed: {
+    lgCols(){
+      return 12 / (this.boards.length+1)
+    }
+  },
+
   methods: {
     showStats(stats) {
       return `${stats?.count} 次` + (stats.price > 0 ? ` (${stats.price} 元)` : "");
@@ -109,12 +115,16 @@ export default {
     fetchData() {
       this.loading = true
       return this.fetcher()
+        .then(res => {
+          this.response = res
+        })
         .catch((err) => {
           console.error(err);
           this.$emit("error", { msg: "加载统计数据时错误: ", err });
         })
         .finally(() => {
           this.loading = false;
+          console.debug(this.behaviours)
         });
     },
 
@@ -126,6 +136,7 @@ export default {
       }
     },
   },
+
   mounted() {
     this.onMobileChanged(this.$vuetify.display.smAndDown);
     this.fetchData();
