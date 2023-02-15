@@ -83,7 +83,7 @@
             density="comfortable"
             :rules="[(v) => !!v || 'Item is required']"
             label="过滤行为"
-            @change="searchRecords()"
+            @change="fetchRecords()"
             required
           ></v-select>
         </v-col>
@@ -93,7 +93,7 @@
             v-model="page"
             :length="maxPage"
             text-color="black"
-            @update:modelValue="onUpdatePage"
+            @update:modelValue="fetchRecords"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -261,7 +261,7 @@ export default {
           .getWatcher(to.params.uid)
           .then((res) => {
             vm.watcher = res;
-            vm.onUpdatePage();
+            vm.fetchRecords();
           })
           .catch((err) => {
             vm.error = getErrorMessage(err)
@@ -275,13 +275,13 @@ export default {
     return watcher.getWatcher(to.params.uid).then((res) => {
       next((vm) => {
         vm.watcher = res;
-        vm.onUpdatePage();
+        vm.fetchRecords();
       });
     });
   },
 
   methods: {
-    onUpdatePage() {
+    fetchRecords() {
       this.loading = true;
       watcher
         .getWatcherRecords(this.watcher.uid, this.page, this.commands_map[this.command])
