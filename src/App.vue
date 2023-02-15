@@ -20,6 +20,7 @@
       elevation="5"
       :rail="!$vuetify.display.mdAndDown"
       expand-on-hover
+      @update:rail="onRailUpdate"
     >
       <v-list>
         <v-list-item
@@ -46,8 +47,49 @@
         >
         </v-list-item>
       </v-list>
-
       <template v-slot:append>
+        <v-list class="mx-auto" v-model:opened="expanded_group">
+          <v-list-group fluid value="settings">
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                prepend-icon="mdi-palette"
+                v-bind="props"
+                title="风格设定"
+              ></v-list-item>
+            </template>
+            <v-list-item
+              lines="three"
+              :title="`切换${
+                $vuetify.theme.current.dark ? '白天' : '暗黑'
+              }模式`"
+              subtitle="手动切换到暗黑/白天模式。"
+              value="style"
+            >
+              <template v-slot:prepend>
+                <v-list-item-action start>
+                  <v-switch
+                    class="elevation-0"
+                    v-model="dark_theme"
+                    @change="switchTheme"
+                    :color="dark_theme ? 'white' : 'black'"
+                  />
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+            <v-list-item
+              lines="three"
+              title="风格跟随系统"
+              subtitle="本网站将会随着系统时间自动切换白天与黑暗模式。"
+              value="follow"
+            >
+              <template v-slot:prepend>
+                <v-list-item-action start>
+                  <v-checkbox-btn @update:modelValue="onSwitchFollowTheme" v-model="dark_follow_system"></v-checkbox-btn>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+          </v-list-group>
+        </v-list>
         <v-list>
           <v-list-item
             to="/about"
@@ -75,55 +117,12 @@
         </v-btn>
       </template>
     </v-snackbar>
-
-    <!--- extra content -->
-    <v-slide-y-transition>
-      <v-snackbar
-        multi-line
-        timeout="30000"
-        v-model="announcement"
-        light
-        vertical
-        location="bottom left"
-        transition="slide-y-reverse-transition"
-      >
-        <v-card color="transparent" elevation="0" class="pa-0 ma-0">
-          <v-card-header>
-            <v-row>
-              <v-col cols="11">
-                意见征集
-              </v-col>
-              <v-spacer></v-spacer>
-              <v-col cols="1">
-                <v-btn
-                color="grey-darken-1"
-                size="x-small"
-                icon
-                variant="text"
-                @click="announcement = false"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-header>
-        <v-card-title>你觉得是否该解放仅限虚拟主播和闪电主播的记录限制？</v-card-title>
-        <v-card-text>
-          目前基于隐私问题限制了非虚拟主播和闪电主播的记录限制。现正考虑是否应该解放限制让记录行为扩大到普通B站用户。<br>
-          通过后，直播间监控将基于目前仅限虚拟主播及闪电主播作为记录，但行为记录则会概括全体B站用户，并且进行统计化排行及分析。
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn variant="text" color="red" @click="noReminder()">不再提醒</v-btn>
-          <v-btn variant="text" color="green" href="https://github.com/eric2788/ddstats.ericlamm.xyz/discussions/3" target="_blank">参与投票</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-snackbar>
-    </v-slide-y-transition>
   </v-app>
 </template>
 
 <script>
+import { getErrorMessage } from "./api/utils";
+
 export default {
   name: "App",
 
@@ -144,20 +143,22 @@ export default {
         text: "高亮行为记录",
         href: "/records",
       },
-      /*
       {
-        icon: 'mdi-account-search',
-        text: 'B站用戶搜索',
-        href: '/watchers'
+        icon: "mdi-account-search",
+        text: "B站用戶搜索",
+        href: "/watchers",
       },
-      */
     ],
     drawer: false,
     snackbar: false,
     text: "",
     mobileChangeObservers: {},
     installEvent: null,
-    announcement: false,
+    expanded_group: [],
+    dark_theme: false,
+    dark_follow_system: false,
+
+    systemThemeDetector: null,
   }),
 
   computed: {
@@ -172,26 +173,22 @@ export default {
       this.text = text;
     },
 
+    onRailUpdate(value) {
+      if (value) {
+        this.expanded_group = [];
+      }
+    },
+
+    switchTheme() {
+      this.$vuetify.theme.name = this.dark_theme ? "darkTheme" : "myTheme";
+    },
+
     handleErr({ msg, err }) {
       console.log(err.response);
 
-      let errMsg;
-
-      if (err?.response) {
-        errMsg =
-          err?.response?.data?.msg ??
-          err?.response?.data?.message ??
-          err?.response?.statusText;
-      } else {
-        errMsg = err?.message ?? err?.toString();
-      }
+      let errMsg = getErrorMessage(err);
       const message = `${msg}${errMsg}`;
       this.showSnackbar(message);
-    },
-
-    noReminder() {
-      this.announcement = false;
-      window.localStorage.setItem('no-reminder', 'true')
     },
 
     installApp() {
@@ -206,10 +203,72 @@ export default {
         this.showSnackbar("您的浏览器不支持 App 安装");
       }
     },
+
+    setupPwa() {
+      // PWA
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        this.installEvent = e;
+      });
+
+      const show = this.showSnackbar;
+      window.addEventListener("pwa:updated", () => {
+        show("有可用的新内容，请刷新页面");
+      });
+    },
+
+    setupTheme() {
+      // Theme Follow System
+
+      console.debug('setup theme')
+
+      this.dark_follow_system =
+        localStorage.getItem("theme_follow_system") === "true";
+
+      console.debug('following system theme: ', this.dark_follow_system)
+
+      this.systemThemeDetector = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+
+      this.systemThemeDetector.onchange = (e) => {
+        console.debug('system theme changed to dark: ', e.matches)
+        if (this.dark_follow_system) {
+          console.debug('is following system theme, so switch to dark')
+          this.dark_theme = e.matches;
+          this.switchTheme();
+        }
+      };
+      if (this.dark_follow_system) {
+        this.dark_theme = this.systemThemeDetector.matches;
+        if (this.dark_theme) {
+          console.debug('dark theme applied')
+        }
+        this.switchTheme();
+      }
+    },
+
+    onSwitchFollowTheme(v) {
+      if (v) {
+        console.debug('switch to follow system theme')
+        localStorage.setItem("theme_follow_system", "true");
+        this.dark_theme = this.systemThemeDetector.matches;
+        if (this.dark_theme) {
+          console.debug('dark theme applied')
+        }
+        this.switchTheme();
+      }else{
+        console.debug('switch to not follow system theme')
+        localStorage.setItem("theme_follow_system", "false");
+      }
+    }
   },
 
   provide() {
-    return { observers: this.mobileChangeObservers };
+    return {
+      observers: this.mobileChangeObservers,
+      theme: () => (this.$vuetify.theme.current.dark ? "dark" : "light"),
+    };
   },
 
   watch: {
@@ -222,27 +281,16 @@ export default {
   },
 
   created() {
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      this.installEvent = e;
-    });
-
-    const show = this.showSnackbar;
-    window.addEventListener("pwa:updated", () => {
-      show("有可用的新内容，请刷新页面");
-    });
-
     if (!this.isMobile) {
       this.drawer = true;
     }
 
+    this.setupPwa();
+    this.setupTheme();
+  },
 
-    if (window.localStorage.getItem('no-reminder') !== 'true') {
-      setTimeout(() => this.announcement = true, 1000)
-    } else {
-      console.debug('skipped reminder')
-    }
-
+  unmounted() {
+    this.systemThemeDetector.onchange = null;
   },
 };
 </script>
@@ -251,7 +299,7 @@ export default {
   width: 5px;
 }
 .scrollable::-webkit-scrollbar-thumb {
-  background-color: #e9e9e9;
+  background-color: rgb(var(--v-theme-border));
 }
 .scrollable::-webkit-scrollbar-track {
   background-color: #fff;
@@ -259,10 +307,10 @@ export default {
 
 .scrollable {
   scrollbar-width: thin;
-  scrollbar-color: #e9e9e9 #fff;
+  scrollbar-color: rgb(var(--v-theme-border)) #fff;
 }
 .el-border {
-  border: 1px solid #e9e9e9;
+  border: 1px solid rgb(var(--v-theme-border));
 }
 .floating-action-btn {
   position: fixed;

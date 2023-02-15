@@ -17,6 +17,11 @@ const routes = [
     component: () => import('../views/WatcherSearchView.vue')
   },
   {
+    path: '/watcher/:uid',
+    name: 'watcher',
+    component: () => import('../views/WatcherDetailView.vue')
+  },
+  {
     path: '/records',
     name: 'records',
     component: () => import('../views/RecordsView.vue')

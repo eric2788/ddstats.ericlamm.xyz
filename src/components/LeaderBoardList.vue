@@ -1,10 +1,10 @@
 <template>
-  <template v-if="users">
+  <template v-if="!loading && users">
     <v-list color="white" elevation="1" three-line height="400" class="scrollable">
       <v-list-subheader  v-if="subheader" :style="backgroundColor" :color="textColor">
         {{ subheader }}
       </v-list-subheader>
-      <template v-if="users.length > 0">
+      <template v-if="users?.length">
         <template v-for="(vup, i) in users" :key="i">
           <v-list-item
             :height="i == 0 ? '100px' : '60px'"
@@ -37,6 +37,10 @@ export default {
   components: { LoadingGrid },
 
   props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     color: {
       type: String,
       default: "white",

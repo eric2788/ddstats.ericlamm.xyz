@@ -1,4 +1,38 @@
 
+const constraints = {
+    commands: [
+        {
+            title: '所有',
+            command: '',
+            pricable: false,
+        },
+        {
+            title: '发送弹幕',
+            command: 'DANMU_MSG',
+            pricable: false,
+        },
+        {
+            title: '进入直播间',
+            command: 'INTERACT_WORD',
+            pricable: false,
+        },
+        {
+            title: '上舰',
+            command: 'USER_TOAST_MSG',
+            pricable: true,
+        },
+        {
+            title: '送礼',
+            command: 'SEND_GIFT',
+            pricable: true,
+        },
+        {
+            title: '发送SC',
+            command: 'SUPER_CHAT_MESSAGE',
+            pricable: true,
+        }
+    ]
+}
 
 export function convertRecords(records){
     if (!records) return records
@@ -39,10 +73,45 @@ export function convertUsers(users){
     return users
 }
 
-
 function toHttps(url){
     if (url.startsWith('http://')) {
         return url.replace('http://', 'https://')
     }
     return url
+}
+
+// convert  { command, count, price } to { title, count, price }
+// and add the commands that behaviours don't have
+export function convertBehaviours(behaviours) {
+    return constraints.commands.filter(v => !!v).map(c => {
+        const behaviour = behaviours?.find(b => b.command === c.command)
+        return {
+            title: c.title,
+            count: behaviour?.count ?? 0,
+            price: behaviour?.price ?? 0
+        }
+    })
+}
+
+export function isPricable(command) {
+    return constraints.commands.find(c => c.command === command)?.pricable ?? false
+}
+
+export function getCommandByTitle(title){
+    const command = constraints.commands.find(c => c.title === title)
+    return command?.command ?? ''
+}
+
+export function getTitles() {
+    return constraints.commands.map(c => c.title)
+}
+
+export function getErrorMessage(err){
+    if (err?.response) {
+        return err?.response?.data?.msg ??
+          err?.response?.data?.message ??
+          err?.response?.statusText;
+      } else {
+        return err?.message ?? err?.toString();
+      }
 }

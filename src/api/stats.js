@@ -6,8 +6,6 @@ async function getGlobalStats(type = "global", top = 10){
     return res.data.data
 }
 
-
-
 async function getCommandStatus(command, price = false, top = 10) {
     const res = await api.get(`/stats/command/${command}`, { params: { top, price } })
     return res.data.data

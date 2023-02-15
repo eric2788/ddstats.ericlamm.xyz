@@ -53,7 +53,7 @@
               <v-row class="pt-5">
                 <span class="text-caption">个人简介</span>
               </v-row>
-              <v-row class="pt-4">
+              <v-row>
                 <span style="overflow-wrap: break-word;"> {{ vup.sign }} </span>
               </v-row>
             </v-col>
@@ -68,7 +68,7 @@
               <v-row class="pt-5">
                 <span class="text-caption">直播间传送门</span>
               </v-row>
-              <v-row class="pt-4">
+              <v-row>
                 <a
                   style="color: inherit"
                   :href="`https://live.bilibili.com/${vup.room_id}`"
@@ -87,8 +87,8 @@
       </user-list-view>
       <v-divider />
       <v-row class="pa-5" justify="center"> </v-row>
-      <vup-stats-board :vup="vup" />
-      <vup-stats-command-board :vup="vup" />
+      <vup-stats-board :boards="global_boards" :behaviours="global_behaviours" :fetcher="fetchUserStats"/>
+      <vup-stats-command-board :guest_boards="guest_boards" :fetcher="fetchCommandStats" />
       <vup-records-board :vup="vup" />
     </template>
   </v-container>
@@ -100,8 +100,10 @@ import VupStatsBoard from "../components/VupStatsBoard.vue";
 import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 
-import userApi from "../api/user";
-import { convertUsers } from "../api/utils"
+import user from "../api/user";
+import stats from '../api/stats'
+
+import { convertUsers, getErrorMessage, convertBehaviours } from "../api/utils"
 
 export default {
   name: "UserDetailView",
@@ -117,23 +119,106 @@ export default {
     vup: null,
     loading: true,
     error: "",
+
+    global_boards: [
+        {
+          title: "最常访问的主播",
+          icon: "mdi-account-arrow-right",
+          subtitle: undefined,
+          panel: "1",
+          command: 'top_dd_vups',
+        },
+        {
+          title: "最常访问的来客",
+          icon: "mdi-account-arrow-left",
+          subtitle: undefined,
+          panel: "2",
+          command: 'top_guest_vups',
+        },
+        {
+          title: "最高花费的主播",
+          icon: "mdi-cash-multiple",
+          subtitle: (props) => `共花费 ${props.spent} 元`,
+          panel: "3",
+          command: 'top_spent_vups',
+        },
+    ],
+
+    guest_boards: [
+        {
+          icon: 'mdi-email-receive',
+          title: '最常发送弹幕的来客',
+          command: 'DANMU_MSG',
+          display: undefined,
+          panel: '6'
+        },
+        {
+          icon: 'mdi-location-enter',
+          title: '最常进入的来客',
+          command: 'INTERACT_WORD',
+          display: undefined,
+          panel: '7'
+        },
+        {
+          icon: 'mdi-chat-alert',
+          title: '最常发送SC的来客',
+          command: 'SUPER_CHAT_MESSAGE',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '8'
+        },
+        {
+          icon: 'mdi-ship-wheel',
+          title: '最常上舰的来客',
+          command: 'USER_TOAST_MSG',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '9'
+        },
+        {
+          icon: 'mdi-gift-open',
+          title: '最常打赏的来客',
+          command: 'SEND_GIFT',
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: '10'
+        }
+    ],
+
   }),
 
   created() {
     this.$watch(
       () => this.$route.params,
       () => {
-        if (!this.$route.params.uid) return;
+        if (!this.$route.params.uid || !this.$route.path.startsWith('/user')) return;
         this.fetchData();
       },
       { immediate: true }
     );
   },
 
+  computed: {
+    global_behaviours() {
+
+      // TODO: remove this after the backend response is changed to array
+      let behaviours = []
+
+      if (!(this.vup?.behaviours_count instanceof Array)) {
+        behaviours = Object.values(this.vup?.behaviours_count ?? {})
+      } else {
+        behaviours = this.vup?.behaviours_count
+      }
+
+      //
+
+      console.debug('global_behaviours: ', behaviours)
+
+      return convertBehaviours(behaviours)
+    }
+  },
+
   methods: {
     fetchData() {
       this.loading = true;
-      userApi
+      user
         .getUser(this.$route.params.uid)
         .then((res) => {
           this.vup = res;
@@ -141,11 +226,19 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.error = err?.response?.data?.message ?? err.statusText
+          this.error = getErrorMessage(err)
           this.$emit("error",{ msg: "加载用户资讯时错误: ", err});
         })
         .finally(() => (this.loading = false));
     },
+
+    async fetchUserStats() {
+      return await stats.getUserStats(this.vup.uid)
+    },
+
+    async fetchCommandStats(command, price) {
+      return await stats.getUserStatsByCommand(this.vup.uid, command, price)
+    }
   }
 };
 </script>

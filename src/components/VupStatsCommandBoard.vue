@@ -1,169 +1,64 @@
 <template>
-  <h3 class="mt-5 mb-3">细节排行统计</h3>
+  <div class="mt-5 mb-3">
+    <h3 class="pt-4 float-left">细节排行统计</h3>
+    <v-switch
+      class="float-right"
+      color="warning"
+      label="金额排行"
+      v-model="priced"
+      @change="fetchData"
+    ></v-switch>
+  </div>
   <v-expansion-panels
-    theme="light"
+    :theme="theme()"
     class="elevation-0"
     multiple
     v-model="expands"
   >
     <v-container class="pa-0">
-      <v-row>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="1" elevation="0" class="el-border">
+      <v-row v-if="dd_boards?.length">
+        <v-col
+          cols="12"
+          md="6"
+          :lg="dd_col"
+          v-for="(b, i) in dd_boards"
+          :key="i"
+        >
+          <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-email-send</v-icon>
-              最常向该主播发送弹幕
+              <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
+              {{ b.title }}
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <leader-board-list
-                :users="danmu_msg?.top_dd_vups"
+                :loading="loadings[b.command]"
+                :users="commands[b.command]?.top_dd_vups"
                 class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="2" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-location-exit</v-icon>
-              最常进入的直播间
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="interact_word?.top_dd_vups"
-                class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="3" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-forum</v-icon>
-              最常向该主播发送SC
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="super_chat_message?.top_dd_vups"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
-                class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-         <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="4" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-ferry</v-icon>
-              最常向该主播上舰
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="user_toast_msg?.top_dd_vups"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
-                class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="5" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-gift</v-icon>
-              最常向该主播打赏
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="send_gift?.top_dd_vups"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
-                class="elevation-0"
+                :subtitle="b.display"
               />
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="6" elevation="0" class="el-border">
+      <v-row v-if="guest_boards?.length">
+        <v-col
+          cols="12"
+          md="6"
+          :lg="guest_col"
+          v-for="(b, i) in guest_boards"
+          :key="i"
+        >
+          <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-email-receive</v-icon>
-              最常发送弹幕的来客
+              <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
+              {{ b.title }}
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <leader-board-list
-                :users="danmu_msg?.top_guest_vups"
+                :loading="loadings[b.command]"
+                :users="commands[b.command]?.top_guest_vups"
                 class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="7" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-location-enter</v-icon>
-              最常进入的来客
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="interact_word?.top_guest_vups"
-                class="elevation-0"
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="8" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-chat-alert</v-icon>
-              最常发送SC的来客
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="super_chat_message?.top_guest_vups"
-                class="elevation-0"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="9" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-ship-wheel</v-icon>
-              最常上舰的来客
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="user_toast_msg?.top_guest_vups"
-                class="elevation-0"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
-              />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <v-expansion-panel value="10" elevation="0" class="el-border">
-            <v-expansion-panel-title>
-              <v-icon large left class="pr-3">mdi-gift-open</v-icon>
-              最常打赏的来客
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <leader-board-list
-                :users="send_gift?.top_guest_vups"
-                class="elevation-0"
-                :subtitle="
-                  (props) => `共 ${props.count} 次 (${props.price} 元)`
-                "
+                :subtitle="b.display"
               />
             </v-expansion-panel-text>
           </v-expansion-panel>
@@ -175,13 +70,90 @@
 
 <script>
 import LeaderBoardList from "../components/LeaderBoardList.vue";
-import api from "../api/stats";
+import { isPricable } from "../api/utils";
 
 export default {
   name: "VueStatsCommandBoard",
 
   props: {
-    vup: Object,
+    dd_boards: {
+      /* definition
+      {
+          icon: 'mdi-email-send', // String
+          title: '最常向该主播发送弹幕', // String
+          command: 'DANMU_MSG', // String
+          display: undefined, // Function
+          panel: '1' // String
+      },
+      */
+      type: Array,
+      // because both watchers and vups dd_boards are the same, so we can use the default value
+      default: () => [
+        {
+          icon: "mdi-email-send",
+          title: "最常向该主播发送弹幕",
+          command: "DANMU_MSG",
+          display: undefined,
+          panel: "1",
+        },
+        {
+          icon: "mdi-location-exit",
+          title: "最常进入的直播间",
+          command: "INTERACT_WORD",
+          display: undefined,
+          panel: "2",
+        },
+        {
+          icon: "mdi-forum",
+          title: "最常向该主播发送SC",
+          command: "SUPER_CHAT_MESSAGE",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "3",
+        },
+        {
+          icon: "mdi-ferry",
+          title: "最常向该主播上舰",
+          command: "USER_TOAST_MSG",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "4",
+        },
+        {
+          icon: "mdi-gift",
+          title: "最常向该主播打赏",
+          command: "SEND_GIFT",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "5",
+        },
+      ],
+    },
+
+    // watcher will not have guest_board
+    guest_boards: {
+      /* definition
+      {
+          icon: 'mdi-email-receive', // String
+          title: '最常发送弹幕的来客', // String
+          command: 'DANMU_MSG', // String
+          display: undefined, // Function
+          panel: '6' // String
+      },
+      */
+      type: Array,
+      default: () => [],
+    },
+
+    fetcher: {
+      type: Function,
+      required: true,
+      // example invoke
+      default: async (cmd, price) => {
+        await new Promise((res) => setTimeout(res, 3000));
+        return {
+          top_dd_vups: [],
+          top_guest_vups: [],
+        };
+      },
+    },
   },
 
   components: {
@@ -189,89 +161,75 @@ export default {
   },
 
   data: () => ({
-    loading: true,
+    loadings: {},
     commands: {},
     expands: [],
-    priced: new Set()
+    priced: false,
   }),
 
+  computed: {
+    dd_col() {
+      return Math.max(Math.ceil(12 / this.dd_boards.length), 3);
+    },
+
+    guest_col() {
+      return Math.max(Math.ceil(12 / this.guest_boards.length), 3);
+    },
+  },
+
   methods: {
-
-
-    switchPriced(command){
-      if (this.priced.has(command)){
-        this.priced.delete(command)
-      }else{
-        this.priced.add(command)
+    async fetchStats(command, price = false) {
+      this.loadings[command] = true;
+      try {
+        delete this.commands[command];
+        if (!isPricable(command)) {
+          price = false;
+        }
+        const res = await this.fetcher(command, price);
+        this.commands[command] = res;
+      } finally {
+        this.loadings[command] = false;
       }
     },
 
-    async fetchStats(command, price = false) {
-      delete this.commands[command]
-      const res = await api.getUserStatsByCommand(this.vup.uid, command, price);
-      this.commands[command] = res;
-    },
-
-    fetchData() {
-      this.loading = true;
-      return Promise.allSettled([
-        this.fetchStats("DANMU_MSG"),
-        this.fetchStats("INTERACT_WORD"),
-        this.fetchStats("SUPER_CHAT_MESSAGE"),
-        this.fetchStats("USER_TOAST_MSG"),
-        this.fetchStats("SEND_GIFT"),
-      ])
-        .then((results) => {
-          for (const result of results) {
-            if (result.status === "rejected") {
-              console.error(result.reason);
-              this.$emit("error", {
-                msg: `加载统计数据时错误: ${result.reason}`,
-                err: result.reason,
-              });
-              break;
-            }
+    async fetchData() {
+      const commandsToFetch = [
+        ...new Set(
+          this.dd_boards.concat(this.guest_boards).map((b) => b.command)
+        ),
+      ];
+      return Promise.allSettled(
+        commandsToFetch.map((b) => this.fetchStats(b, this.priced))
+      ).then((results) => {
+        for (const result of results) {
+          if (result.status === "rejected") {
+            console.error(result.reason);
+            this.$emit("error", {
+              msg: `加载统计数据时错误: ${result.reason}`,
+              err: result.reason,
+            });
+            break;
           }
-        })
-        .finally(() => (this.loading = false));
+        }
+      });
     },
 
     onMobilechanged(v) {
       if (v) {
         this.expands = [];
       } else {
-        this.expands = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+        this.expands = this.dd_boards
+          .concat(this.guest_boards)
+          .map((b) => b.panel);
       }
     },
   },
 
-  computed: {
-    danmu_msg() {
-      return this.commands["DANMU_MSG"];
-    },
-
-    interact_word() {
-      return this.commands["INTERACT_WORD"];
-    },
-
-    super_chat_message() {
-      return this.commands["SUPER_CHAT_MESSAGE"];
-    },
-
-    user_toast_msg() {
-      return this.commands["USER_TOAST_MSG"];
-    },
-
-    send_gift() {
-      return this.commands["SEND_GIFT"];
-    },
-  },
-
-  inject: ["observers"],
+  inject: ["observers", "theme"],
 
   mounted() {
-    this.onMobilechanged(this.$vuetify.display.smAndDown)
-    this.fetchData()
+    this.onMobilechanged(this.$vuetify.display.smAndDown);
+    this.fetchData();
   },
 
   created() {
