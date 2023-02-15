@@ -103,7 +103,7 @@ export default {
 
   computed: {
     lgCols(){
-      return 12 / (this.boards.length+1)
+      return Math.max(Math.ceil(12 / (this.boards.length+1)), 3)
     }
   },
 

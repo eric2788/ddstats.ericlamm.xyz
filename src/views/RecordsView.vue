@@ -73,7 +73,7 @@
 <script>
 import api from "../api/records";
 import RecordListView from "../components/RecordListView.vue";
-import { convertRecords } from "../api/utils";
+import { convertRecords, getTitles, getCommandByTitle } from "../api/utils";
 
 export default {
   name: "RecordsView",
@@ -92,14 +92,6 @@ export default {
 
     records: [],
     command: '所有',
-    commands_map: {
-      '所有': '',
-      '发送弹幕': 'DANMU_MSG',
-      '进入直播间': 'INTERACT_WORD',
-      '上舰': 'USER_TOAST_MSG',
-      '送礼': 'SEND_GIFT',
-      '发送SC': 'SUPER_CHAT_MESSAGE'
-    },
 
     searchingQueue: [],
     searching: false,
@@ -121,7 +113,7 @@ export default {
       this.loading = true;
       console.debug(`searching: ${search}`)
       return api
-        .getGlobalRecords(search, this.page, this.showSelf, this.commands_map[this.command])
+        .getGlobalRecords(search, this.page, this.showSelf, getCommandByTitle(this.command))
         .then((records) => {
           this.records = convertRecords(records.list);
           this.maxPage = records.max_page;
@@ -161,7 +153,7 @@ export default {
 
   computed: {
     commands(){
-      return Object.keys(this.commands_map)
+      return getTitles()
     }
   },
 

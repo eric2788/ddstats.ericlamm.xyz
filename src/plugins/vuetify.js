@@ -13,7 +13,6 @@ export default createVuetify(
       defaultTheme: 'myTheme',
       themes: {
         myTheme: {
-          
           dark: false,
           colors: {
             background: '#FFFFFF',
@@ -27,7 +26,15 @@ export default createVuetify(
             success: '#4CAF50',
             warning: '#FB8C00',
           }
-        }
+        },
+        // create a dark theme
+        darkTheme: {
+          dark: true,
+          colors: {
+            background: '#121212',
+            surface: '#303030',
+          },
+        },
       }
     }
   }

@@ -45,8 +45,10 @@
           @click="installApp"
         >
         </v-list-item>
+        <v-list-item>
+          <theme-switcher />
+        </v-list-item>
       </v-list>
-
       <template v-slot:append>
         <v-list>
           <v-list-item
@@ -80,9 +82,14 @@
 
 <script>
 import { getErrorMessage } from './api/utils'
+import ThemeSwitcher from './components/ThemeSwitcher.vue'
 
 export default {
   name: "App",
+
+  components: {
+    ThemeSwitcher,
+  },
 
   data: () => ({
     menus: [
@@ -145,7 +152,7 @@ export default {
       } else {
         this.showSnackbar("您的浏览器不支持 App 安装");
       }
-    },
+    }
   },
 
   provide() {

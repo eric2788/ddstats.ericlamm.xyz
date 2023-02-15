@@ -88,7 +88,7 @@
       <v-divider />
       <v-row class="pa-5" justify="center"> </v-row>
       <vup-stats-board :boards="global_boards" :behaviours="global_behaviours" :fetcher="fetchUserStats"/>
-      <vup-stats-command-board :dd_boards="dd_boards" :guest_boards="guest_boards" :fetcher="fetchCommandStats" />
+      <vup-stats-command-board :guest_boards="guest_boards" :fetcher="fetchCommandStats" />
       <vup-records-board :vup="vup" />
     </template>
   </v-container>
@@ -103,7 +103,7 @@ import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 import user from "../api/user";
 import stats from '../api/stats'
 
-import { convertUsers, toTitle, getErrorMessage } from "../api/utils"
+import { convertUsers, getErrorMessage, convertBehaviours } from "../api/utils"
 
 export default {
   name: "UserDetailView",
@@ -142,44 +142,6 @@ export default {
           panel: "3",
           command: 'top_spent_vups',
         },
-    ],
-
-    dd_boards: [
-        {
-          icon: 'mdi-email-send',
-          title: '最常向该主播发送弹幕',
-          command: 'DANMU_MSG',
-          display: undefined,
-          panel: '1'
-        },
-        {
-          icon: 'mdi-location-exit',
-          title: '最常进入的直播间',
-          command: 'INTERACT_WORD',
-          display: undefined,
-          panel: '2'
-        },
-        {
-          icon: 'mdi-forum',
-          title: '最常向该主播发送SC',
-          command: 'SUPER_CHAT_MESSAGE',
-          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-          panel: '3'
-        },
-        {
-          icon: 'mdi-ferry',
-          title: '最常向该主播上舰',
-          command: 'USER_TOAST_MSG',
-          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-          panel: '4'
-        },
-        {
-          icon: 'mdi-gift',
-          title: '最常向该主播打赏',
-          command: 'SEND_GIFT',
-          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-          panel: '5'
-        }
     ],
 
     guest_boards: [
@@ -249,12 +211,7 @@ export default {
 
       console.debug('global_behaviours: ', behaviours)
 
-      return behaviours.map(b => {
-        return {
-          ...b,
-          title: toTitle(b.command),
-        }
-      })
+      return convertBehaviours(behaviours)
     }
   },
 

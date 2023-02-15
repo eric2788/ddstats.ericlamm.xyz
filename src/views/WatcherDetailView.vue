@@ -70,13 +70,12 @@
         :fetcher="fetchUserStats"
       />
       <vup-stats-command-board
-        :dd_boards="dd_boards"
         :fetcher="fetchCommandStats"
       />
       <v-divider class="mt-5" />
       <h3 class="mt-5 mb-3">高亮行为记录</h3>
       <v-row class="pt-5" justify="center">
-        <v-col cols="12" md="4" lg=2>
+        <v-col cols="12" md="4" lg="2">
           <v-select
             v-model="command"
             :items="commands"
@@ -87,7 +86,7 @@
             required
           ></v-select>
         </v-col>
-        <v-col cols="12" md="8" lg=10>
+        <v-col cols="12" md="8" lg="10">
           <v-pagination
             v-if="maxPage > 1"
             v-model="page"
@@ -99,7 +98,7 @@
         </v-col>
       </v-row>
       <v-row class="pt-5">
-        <v-col cols="12">
+        <v-col cols="12" style="min-height: 300px;">
           <template v-if="loading">
             <v-row align="center" justify="center">
               <v-progress-circular indeterminate color="blue" />
@@ -164,7 +163,13 @@ import VupStatsBoard from "../components/VupStatsBoard.vue";
 import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 
 import watcher from "../api/watcher";
-import { toTitle, convertRecords, getErrorMessage } from "../api/utils";
+import {
+  convertRecords,
+  getErrorMessage,
+  convertBehaviours,
+  getTitles,
+  getCommandByTitle,
+} from "../api/utils";
 
 export default {
   name: "WatcherDetailView",
@@ -175,23 +180,21 @@ export default {
   },
 
   data: () => ({
-    watcher: null,
+    watcher: {
+      uid: 123456,
+      u_names: 'tester',
+      total_spent: 22222,
+      first_listen_at: new Date(),
+      dd_count: 333333,
+      last_behaviour_at: new Date()
+    },
     loading: false,
     error: "",
 
     page: 1,
     maxPage: 2,
     total: 0,
-    command: '所有',
-
-    commands_map: {
-      '所有': "",
-      '发送弹幕': "DANMU_MSG",
-      '进入直播间': "INTERACT_WORD",
-      '上舰': "USER_TOAST_MSG",
-      '送礼': "SEND_GIFT",
-      '发送SC': "SUPER_CHAT_MESSAGE",
-    },
+    command: "所有",
 
     records: [],
 
@@ -213,43 +216,6 @@ export default {
       },
     ],
 
-    dd_boards: [
-      {
-        icon: "mdi-email-send",
-        title: "最常向该主播发送弹幕",
-        command: "DANMU_MSG",
-        display: undefined,
-        panel: "1",
-      },
-      {
-        icon: "mdi-location-exit",
-        title: "最常进入的直播间",
-        command: "INTERACT_WORD",
-        display: undefined,
-        panel: "2",
-      },
-      {
-        icon: "mdi-forum",
-        title: "最常向该主播发送SC",
-        command: "SUPER_CHAT_MESSAGE",
-        display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-        panel: "3",
-      },
-      {
-        icon: "mdi-ferry",
-        title: "最常向该主播上舰",
-        command: "USER_TOAST_MSG",
-        display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-        panel: "4",
-      },
-      {
-        icon: "mdi-gift",
-        title: "最常向该主播打赏",
-        command: "SEND_GIFT",
-        display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
-        panel: "5",
-      },
-    ],
   }),
 
   beforeRouteEnter(to, from, next) {
@@ -265,7 +231,7 @@ export default {
             vm.fetchRecords();
           })
           .catch((err) => {
-            vm.error = getErrorMessage(err)
+            vm.error = getErrorMessage(err);
             vm.$emit("error", { msg: "加载用户资讯时错误: ", err });
           })
           .finally(() => (vm.loading = false));
@@ -285,7 +251,11 @@ export default {
     fetchRecords() {
       this.loading = true;
       watcher
-        .getWatcherRecords(this.watcher.uid, this.page, this.commands_map[this.command])
+        .getWatcherRecords(
+          this.watcher.uid,
+          this.page,
+          getCommandByTitle(this.command)
+        )
         .then((res) => {
           this.page = res.page;
           this.maxPage = res.max_page;
@@ -295,7 +265,8 @@ export default {
         .catch((err) => {
           console.error(err);
           this.$emit("error", { msg: "加载高亮行为记录时错误: ", err });
-        }).finally(() => this.loading = false);
+        })
+        .finally(() => (this.loading = false));
     },
 
     async fetchUserStats() {
@@ -316,15 +287,10 @@ export default {
 
   computed: {
     global_behaviours() {
-      return this.watcher?.behaviours?.map((b) => {
-        return {
-          ...b,
-          title: toTitle(b.command),
-        };
-      });
+      return convertBehaviours(this.watcher?.behaviours);
     },
     commands() {
-      return Object.keys(this.commands_map);
+      return getTitles();
     },
   },
 };

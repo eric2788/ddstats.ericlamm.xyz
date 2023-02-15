@@ -1,5 +1,6 @@
 <template>
   <h3 class="mt-5 mb-3">细节排行统计</h3>
+  <v-switch color="orange" label="金额排行" v-model="priced" @change="fetchData"></v-switch>
   <v-expansion-panels
     theme="light"
     class="elevation-0"
@@ -8,7 +9,13 @@
   >
     <v-container class="pa-0">
       <v-row v-if="dd_boards?.length">
-        <v-col cols="12" md="6" :lg="dd_col" v-for="(b, i) in dd_boards" :key="i">
+        <v-col
+          cols="12"
+          md="6"
+          :lg="dd_col"
+          v-for="(b, i) in dd_boards"
+          :key="i"
+        >
           <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
               <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -26,7 +33,13 @@
         </v-col>
       </v-row>
       <v-row v-if="guest_boards?.length">
-        <v-col cols="12" md="6" :lg="guest_col" v-for="(b, i) in guest_boards" :key="i">
+        <v-col
+          cols="12"
+          md="6"
+          :lg="guest_col"
+          v-for="(b, i) in guest_boards"
+          :key="i"
+        >
           <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
             <v-expansion-panel-title>
               <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -49,12 +62,12 @@
 
 <script>
 import LeaderBoardList from "../components/LeaderBoardList.vue";
+import { isPricable } from '../api/utils'
 
 export default {
   name: "VueStatsCommandBoard",
 
   props: {
-    
     dd_boards: {
       /* definition
       {
@@ -66,7 +79,44 @@ export default {
       },
       */
       type: Array,
-      default: () => []
+      // because both watchers and vups dd_boards are the same, so we can use the default value
+      default: () => [
+        {
+          icon: "mdi-email-send",
+          title: "最常向该主播发送弹幕",
+          command: "DANMU_MSG",
+          display: undefined,
+          panel: "1",
+        },
+        {
+          icon: "mdi-location-exit",
+          title: "最常进入的直播间",
+          command: "INTERACT_WORD",
+          display: undefined,
+          panel: "2",
+        },
+        {
+          icon: "mdi-forum",
+          title: "最常向该主播发送SC",
+          command: "SUPER_CHAT_MESSAGE",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "3",
+        },
+        {
+          icon: "mdi-ferry",
+          title: "最常向该主播上舰",
+          command: "USER_TOAST_MSG",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "4",
+        },
+        {
+          icon: "mdi-gift",
+          title: "最常向该主播打赏",
+          command: "SEND_GIFT",
+          display: (props) => `共 ${props.count} 次 (${props.price} 元)`,
+          panel: "5",
+        },
+      ],
     },
 
     // watcher will not have guest_board
@@ -81,7 +131,7 @@ export default {
       },
       */
       type: Array,
-      default: () => []
+      default: () => [],
     },
 
     fetcher: {
@@ -89,14 +139,13 @@ export default {
       required: true,
       // example invoke
       default: async (cmd, price) => {
-        await new Promise((res,) => setTimeout(res, 3000))
+        await new Promise((res) => setTimeout(res, 3000));
         return {
           top_dd_vups: [],
           top_guest_vups: [],
-        }
-      }
-    }
-
+        };
+      },
+    },
   },
 
   components: {
@@ -107,33 +156,27 @@ export default {
     loadings: {},
     commands: {},
     expands: [],
-    priced: new Set(),
+    priced: false,
   }),
 
   computed: {
     dd_col() {
-      return Math.ceil(12/this.dd_boards.length)
+      return Math.max(Math.ceil(12 / this.dd_boards.length), 3);
     },
 
     guest_col() {
-      return Math.ceil(12/this.guest_boards.length)
-    }
+      return Math.max(Math.ceil(12 / this.guest_boards.length), 3);
+    },
   },
 
   methods: {
-    async switchPriced(command){
-      if (this.priced.has(command)){
-        this.priced.delete(command)
-      }else{
-        this.priced.add(command)
-      }
-      await this.fetchStats(command, this.priced.has(command))
-    },
-
     async fetchStats(command, price = false) {
       this.loadings[command] = true;
       try {
-        delete this.commands[command]
+        delete this.commands[command];
+        if (!isPricable(command)) {
+          price = false
+        }
         const res = await this.fetcher(command, price);
         this.commands[command] = res;
       } finally {
@@ -142,27 +185,34 @@ export default {
     },
 
     async fetchData() {
-      const commandsToFetch = [...new Set(this.dd_boards.concat(this.guest_boards).map(b => b.command))]
-      return Promise.allSettled(commandsToFetch.map(b => this.fetchStats(b)))
-        .then((results) => {
-          for (const result of results) {
-            if (result.status === "rejected") {
-              console.error(result.reason);
-              this.$emit("error", {
-                msg: `加载统计数据时错误: ${result.reason}`,
-                err: result.reason,
-              });
-              break;
-            }
+      const commandsToFetch = [
+        ...new Set(
+          this.dd_boards.concat(this.guest_boards).map((b) => b.command)
+        ),
+      ];
+      return Promise.allSettled(
+        commandsToFetch.map((b) => this.fetchStats(b, this.priced))
+      ).then((results) => {
+        for (const result of results) {
+          if (result.status === "rejected") {
+            console.error(result.reason);
+            this.$emit("error", {
+              msg: `加载统计数据时错误: ${result.reason}`,
+              err: result.reason,
+            });
+            break;
           }
-        })
+        }
+      });
     },
 
     onMobilechanged(v) {
       if (v) {
         this.expands = [];
       } else {
-        this.expands = this.dd_boards.concat(this.guest_boards).map(b => b.panel)
+        this.expands = this.dd_boards
+          .concat(this.guest_boards)
+          .map((b) => b.panel);
       }
     },
   },
@@ -170,8 +220,8 @@ export default {
   inject: ["observers"],
 
   mounted() {
-    this.onMobilechanged(this.$vuetify.display.smAndDown)
-    this.fetchData()
+    this.onMobilechanged(this.$vuetify.display.smAndDown);
+    this.fetchData();
   },
 
   created() {
