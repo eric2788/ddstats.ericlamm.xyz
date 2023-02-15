@@ -188,7 +188,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        if (!this.$route.params.uid) return;
+        if (!this.$route.params.uid || !this.$route.path.startsWith('/user')) return;
         this.fetchData();
       },
       { immediate: true }

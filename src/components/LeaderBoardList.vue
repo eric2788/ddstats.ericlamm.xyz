@@ -1,5 +1,5 @@
 <template>
-  <template v-if="!loading">
+  <template v-if="!loading && users">
     <v-list color="white" elevation="1" three-line height="400" class="scrollable">
       <v-list-subheader  v-if="subheader" :style="backgroundColor" :color="textColor">
         {{ subheader }}

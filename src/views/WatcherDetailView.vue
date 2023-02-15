@@ -29,7 +29,7 @@
             <span class="text-caption">UID:{{ watcher.uid }} 的名称</span>
           </v-row>
           <v-row>
-            {{ watcher.u_names }}
+            {{ watcher.u_names.split(',').join(' <- ') }}
           </v-row>
         </v-col>
         <v-col cols="12" sm="6" md="6" lg="3">
@@ -82,7 +82,7 @@
             density="comfortable"
             :rules="[(v) => !!v || 'Item is required']"
             label="过滤行为"
-            @change="fetchRecords()"
+            ref="filter"
             required
           ></v-select>
         </v-col>
@@ -93,6 +93,7 @@
             :length="maxPage"
             text-color="black"
             density="comfortable"
+            :disabled="loading"
             @update:modelValue="fetchRecords"
           ></v-pagination>
         </v-col>
@@ -247,7 +248,8 @@ export default {
         .getWatcherRecords(
           this.watcher.uid,
           this.page,
-          getCommandByTitle(this.command)
+          getCommandByTitle(this.command),
+          10
         )
         .then((res) => {
           this.page = res.page;
@@ -258,6 +260,7 @@ export default {
         .catch((err) => {
           console.error(err);
           this.$emit("error", { msg: "加载高亮行为记录时错误: ", err });
+          this.command = '所有'
         })
         .finally(() => (this.loading = false));
     },
@@ -285,6 +288,14 @@ export default {
     commands() {
       return getTitles();
     },
+  },
+
+  watch: {
+    command() {
+      this.page = 1;
+      document.activeElement.blur();
+      this.fetchRecords();
+    }
   },
 };
 </script>>

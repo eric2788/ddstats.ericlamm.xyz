@@ -124,7 +124,6 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          console.debug(this.behaviours)
         });
     },
 

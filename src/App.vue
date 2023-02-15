@@ -20,6 +20,7 @@
       elevation="5"
       :rail="!$vuetify.display.mdAndDown"
       expand-on-hover
+      @update:rail="onRailUpdate"
     >
       <v-list>
         <v-list-item
@@ -47,8 +48,8 @@
         </v-list-item>
       </v-list>
       <template v-slot:append>
-        <v-list class="mx-auto" >
-          <v-list-group fluid>
+        <v-list class="mx-auto" v-model:opened="expanded_group">
+          <v-list-group fluid value="settings">
             <template v-slot:activator="{ props }">
               <v-list-item
                 prepend-icon="mdi-palette"
@@ -58,13 +59,20 @@
             </template>
             <v-list-item
               lines="three"
-              :title="`切换${$vuetify.theme.current.dark ? '白天': '暗黑'}模式`"
+              :title="`切换${
+                $vuetify.theme.current.dark ? '白天' : '暗黑'
+              }模式`"
               subtitle="手动切换到暗黑/白天模式。"
               value="style"
             >
               <template v-slot:prepend>
                 <v-list-item-action start>
-                  <theme-switcher />
+                  <v-switch
+                    class="elevation-0"
+                    v-model="dark_theme"
+                    @change="switchTheme"
+                    :color="dark_theme ? 'white' : 'black'"
+                  />
                 </v-list-item-action>
               </template>
             </v-list-item>
@@ -76,7 +84,7 @@
             >
               <template v-slot:prepend>
                 <v-list-item-action start>
-                  <v-checkbox></v-checkbox>
+                  <v-checkbox-btn @update:modelValue="onSwitchFollowTheme" v-model="dark_follow_system"></v-checkbox-btn>
                 </v-list-item-action>
               </template>
             </v-list-item>
@@ -114,14 +122,9 @@
 
 <script>
 import { getErrorMessage } from "./api/utils";
-import ThemeSwitcher from "./components/ThemeSwitcher.vue";
 
 export default {
   name: "App",
-
-  components: {
-    ThemeSwitcher,
-  },
 
   data: () => ({
     menus: [
@@ -151,6 +154,11 @@ export default {
     text: "",
     mobileChangeObservers: {},
     installEvent: null,
+    expanded_group: [],
+    dark_theme: false,
+    dark_follow_system: false,
+
+    systemThemeDetector: null,
   }),
 
   computed: {
@@ -163,6 +171,16 @@ export default {
     showSnackbar(text) {
       this.snackbar = true;
       this.text = text;
+    },
+
+    onRailUpdate(value) {
+      if (value) {
+        this.expanded_group = [];
+      }
+    },
+
+    switchTheme() {
+      this.$vuetify.theme.name = this.dark_theme ? "darkTheme" : "myTheme";
     },
 
     handleErr({ msg, err }) {
@@ -185,6 +203,65 @@ export default {
         this.showSnackbar("您的浏览器不支持 App 安装");
       }
     },
+
+    setupPwa() {
+      // PWA
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        this.installEvent = e;
+      });
+
+      const show = this.showSnackbar;
+      window.addEventListener("pwa:updated", () => {
+        show("有可用的新内容，请刷新页面");
+      });
+    },
+
+    setupTheme() {
+      // Theme Follow System
+
+      console.debug('setup theme')
+
+      this.dark_follow_system =
+        localStorage.getItem("theme_follow_system") === "true";
+
+      console.debug('following system theme: ', this.dark_follow_system)
+
+      this.systemThemeDetector = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+
+      this.systemThemeDetector.onchange = (e) => {
+        console.debug('system theme changed to dark: ', e.matches)
+        if (this.dark_follow_system) {
+          console.debug('is following system theme, so switch to dark')
+          this.dark_theme = e.matches;
+          this.switchTheme();
+        }
+      };
+      if (this.dark_follow_system) {
+        this.dark_theme = this.systemThemeDetector.matches;
+        if (this.dark_theme) {
+          console.debug('dark theme applied')
+        }
+        this.switchTheme();
+      }
+    },
+
+    onSwitchFollowTheme(v) {
+      if (v) {
+        console.debug('switch to follow system theme')
+        localStorage.setItem("theme_follow_system", "true");
+        this.dark_theme = this.systemThemeDetector.matches;
+        if (this.dark_theme) {
+          console.debug('dark theme applied')
+        }
+        this.switchTheme();
+      }else{
+        console.debug('switch to not follow system theme')
+        localStorage.setItem("theme_follow_system", "false");
+      }
+    }
   },
 
   provide() {
@@ -204,19 +281,16 @@ export default {
   },
 
   created() {
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      this.installEvent = e;
-    });
-
-    const show = this.showSnackbar;
-    window.addEventListener("pwa:updated", () => {
-      show("有可用的新内容，请刷新页面");
-    });
-
     if (!this.isMobile) {
       this.drawer = true;
     }
+
+    this.setupPwa();
+    this.setupTheme();
+  },
+
+  unmounted() {
+    this.systemThemeDetector.onchange = null;
   },
 };
 </script>

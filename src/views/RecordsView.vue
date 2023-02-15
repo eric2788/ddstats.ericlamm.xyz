@@ -22,7 +22,6 @@
           :items="commands"
           :rules="[(v) => !!v || 'Item is required']"
           label="过滤行为"
-          @change="searchRecords()"
           required
         ></v-select>
       </v-col>
