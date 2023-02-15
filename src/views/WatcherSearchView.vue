@@ -27,7 +27,7 @@
   </v-container>
 </template>
 <script>
-import api from "../api/watcher";
+import { getErrorMessage } from '../api/utils'
 
 export default {
   name: "WatcherSearchView",
@@ -51,8 +51,8 @@ export default {
             this.showError(r.message)
           }
         }).catch(err => {
-          console.error(err)
-          this.showError(err?.response?.data?.message ?? err.statusText)
+          console.warn(err)
+          this.showError(getErrorMessage(err))
           this.$emit('error', { msg: "加载用户资讯时错误: ", err })
         }).finally(() => this.loading = false)
     },

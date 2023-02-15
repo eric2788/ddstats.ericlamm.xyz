@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import { getErrorMessage } from './api/utils'
+
 export default {
   name: "App",
 
@@ -127,16 +129,7 @@ export default {
     handleErr({ msg, err }) {
       console.log(err.response);
 
-      let errMsg;
-
-      if (err?.response) {
-        errMsg =
-          err?.response?.data?.msg ??
-          err?.response?.data?.message ??
-          err?.response?.statusText;
-      } else {
-        errMsg = err?.message ?? err?.toString();
-      }
+      let errMsg = getErrorMessage(err)
       const message = `${msg}${errMsg}`;
       this.showSnackbar(message);
     },

@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-5">
-    <template v-if="!watcher || loading">
+    <template v-if="!watcher">
       <template v-if="!!error">
         <v-alert border type="error">
           <v-alert-title>用戶资讯加载失败: </v-alert-title>
@@ -64,38 +64,6 @@
         </v-col>
       </v-row>
       <v-divider class="mt-5" />
-      <div class="text-center">
-        <v-pagination
-          v-model="page"
-          :length="maxPage"
-          text-color="black"
-          @update:modelValue="onUpdatePage"
-        ></v-pagination>
-      </div>
-      <v-row class="pt-5">
-        <v-col cols="12">
-          <template v-if="loading">
-            <v-row align="center" justify="center">
-              <v-progress-circular indeterminate color="blue" />
-            </v-row>
-          </template>
-          <template v-else-if="records?.length > 0">
-            <template v-for="(record, index) in records" :key="index">
-              <record-list-view :record="record"></record-list-view>
-              <v-divider />
-            </template>
-          </template>
-          <template v-else>
-            <v-row justify="center" align="center"> 没有记录 </v-row>
-          </template>
-        </v-col>
-        <div v-if="!loading && records?.length > 0" class="text-center pa-5">
-          <v-btn rounded="0" variant="text" @click="toTop">
-            <v-icon left>mdi-arrow-up</v-icon>
-            返回頂部
-          </v-btn>
-        </div>
-      </v-row>
       <vup-stats-board
         :boards="global_boards"
         :behaviours="global_behaviours"
@@ -105,6 +73,88 @@
         :dd_boards="dd_boards"
         :fetcher="fetchCommandStats"
       />
+      <v-divider class="mt-5" />
+      <h3 class="mt-5 mb-3">高亮行为记录</h3>
+      <v-row class="pt-5" justify="center">
+        <v-col cols="12" md="4" lg=2>
+          <v-select
+            v-model="command"
+            :items="commands"
+            density="comfortable"
+            :rules="[(v) => !!v || 'Item is required']"
+            label="过滤行为"
+            @change="searchRecords()"
+            required
+          ></v-select>
+        </v-col>
+        <v-col cols="12" md="8" lg=10>
+          <v-pagination
+            v-if="maxPage > 1"
+            v-model="page"
+            :length="maxPage"
+            text-color="black"
+            @update:modelValue="onUpdatePage"
+          ></v-pagination>
+        </v-col>
+      </v-row>
+      <v-row class="pt-5">
+        <v-col cols="12">
+          <template v-if="loading">
+            <v-row align="center" justify="center">
+              <v-progress-circular indeterminate color="blue" />
+            </v-row>
+          </template>
+          <template v-else-if="records?.length > 0">
+            <template v-for="(record, index) in records" :key="index">
+              <v-row class="pa-5 d-flex wrap" align="center">
+                <v-col cols="8" sm="10" md="6" lg="8">
+                  <v-row class="pt-2">
+                    <span class="text-h7 mr-2">{{ record.display }}</span>
+                  </v-row>
+                  <v-row class="text-caption">
+                    {{ new Date(record.created_at).toLocaleString() }}
+                  </v-row>
+                </v-col>
+                <v-col cols="12" sm="12" md="2" lg="2">
+                  <v-row class="pt-2" justify="center" justify-md="start">
+                    <v-avatar
+                      v-if="record.image.Valid"
+                      :image="record.image.String"
+                      rounded="0"
+                      size="86"
+                    />
+                    <v-sheet
+                      v-else-if="!$vuetify.display.mobile"
+                      height="50"
+                      color="transparent"
+                    >
+                    </v-sheet>
+                  </v-row>
+                </v-col>
+                <v-col cols="12" sm="12" md="4" lg="2">
+                  <v-row class="text-center" justify="center">
+                    <v-col cols="12">
+                      <v-btn
+                        rounded="0"
+                        variant="text"
+                        block
+                        @click="$router.push(`/user/${record.target_uid}`)"
+                      >
+                        <v-icon left>mdi-account-arrow-left</v-icon>
+                        查看直播间用户
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-divider />
+            </template>
+          </template>
+          <template v-else>
+            <v-row justify="center" align="center"> 没有记录 </v-row>
+          </template>
+        </v-col>
+      </v-row>
     </template>
   </v-container>
 </template>
@@ -113,7 +163,7 @@ import VupStatsBoard from "../components/VupStatsBoard.vue";
 import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 
 import watcher from "../api/watcher";
-import { toTitle } from "../api/utils";
+import { toTitle, convertRecords, getErrorMessage } from "../api/utils";
 
 export default {
   name: "WatcherDetailView",
@@ -127,6 +177,22 @@ export default {
     watcher: null,
     loading: false,
     error: "",
+
+    page: 1,
+    maxPage: 2,
+    total: 0,
+    command: '所有',
+
+    commands_map: {
+      '所有': "",
+      '发送弹幕': "DANMU_MSG",
+      '进入直播间': "INTERACT_WORD",
+      '上舰': "USER_TOAST_MSG",
+      '送礼': "SEND_GIFT",
+      '发送SC': "SUPER_CHAT_MESSAGE",
+    },
+
+    records: [],
 
     // watcher will not have guest
     global_boards: [
@@ -195,9 +261,10 @@ export default {
           .getWatcher(to.params.uid)
           .then((res) => {
             vm.watcher = res;
+            vm.onUpdatePage();
           })
           .catch((err) => {
-            vm.error = err?.response?.data?.message ?? err.statusText;
+            vm.error = getErrorMessage(err)
             vm.$emit("error", { msg: "加载用户资讯时错误: ", err });
           })
           .finally(() => (vm.loading = false));
@@ -208,11 +275,28 @@ export default {
     return watcher.getWatcher(to.params.uid).then((res) => {
       next((vm) => {
         vm.watcher = res;
+        vm.onUpdatePage();
       });
     });
   },
 
   methods: {
+    onUpdatePage() {
+      this.loading = true;
+      watcher
+        .getWatcherRecords(this.watcher.uid, this.page, this.commands_map[this.command])
+        .then((res) => {
+          this.page = res.page;
+          this.maxPage = res.max_page;
+          this.total = res.total;
+          this.records = convertRecords(res.list);
+        })
+        .catch((err) => {
+          console.error(err);
+          this.$emit("error", { msg: "加载高亮行为记录时错误: ", err });
+        }).finally(() => this.loading = false);
+    },
+
     async fetchUserStats() {
       return await watcher.getWatcherStats(this.watcher.uid);
     },
@@ -237,6 +321,9 @@ export default {
           title: toTitle(b.command),
         };
       });
+    },
+    commands() {
+      return Object.keys(this.commands_map);
     },
   },
 };

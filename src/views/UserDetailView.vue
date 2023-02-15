@@ -103,7 +103,7 @@ import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 import user from "../api/user";
 import stats from '../api/stats'
 
-import { convertUsers, toTitle } from "../api/utils"
+import { convertUsers, toTitle, getErrorMessage } from "../api/utils"
 
 export default {
   name: "UserDetailView",
@@ -269,7 +269,7 @@ export default {
         })
         .catch((err) => {
           console.error(err);
-          this.error = err?.response?.data?.message ?? err.statusText
+          this.error = getErrorMessage(err)
           this.$emit("error",{ msg: "加载用户资讯时错误: ", err});
         })
         .finally(() => (this.loading = false));

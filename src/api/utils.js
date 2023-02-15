@@ -54,7 +54,20 @@ const command_names =  {
     'USER_TOAST_MSG': '上舰',
 }
 
-
 export function toTitle(command) {
     return command_names[command] ?? command
+}
+
+export function getCommands() {
+    return Object.keys(command_names)
+}
+
+export function getErrorMessage(err){
+    if (err?.response) {
+        return err?.response?.data?.msg ??
+          err?.response?.data?.message ??
+          err?.response?.statusText;
+      } else {
+        return err?.message ?? err?.toString();
+      }
 }
