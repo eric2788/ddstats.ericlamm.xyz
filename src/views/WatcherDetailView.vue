@@ -93,6 +93,7 @@
             v-model="page"
             :length="maxPage"
             text-color="black"
+            density="comfortable"
             @update:modelValue="fetchRecords"
           ></v-pagination>
         </v-col>
