@@ -14,7 +14,7 @@
     </v-row>
     <v-divider />
     <h3 class="mt-5 mb-3">DD风云榜</h3>
-    <v-expansion-panels theme="light" multiple v-model="expands_1">
+    <v-expansion-panels :theme="theme()" multiple v-model="expands_1">
       <v-container class="pa-0">
         <v-row>
           <v-col cols="12" md="4" v-for="(b, i) in global_board" :key="i">
@@ -37,7 +37,7 @@
     </v-expansion-panels>
 
     <h3 class="mt-5 mb-3">DD细节行为大赏</h3>
-    <v-expansion-panels theme="light" multiple v-model="expands_2">
+    <v-expansion-panels :theme="theme()" multiple v-model="expands_2">
       <v-container class="pa-0">
         <v-row>
           <v-col cols="12" md="6" lg="3" v-for="(b, i) in detail_board" :key="i">
@@ -263,7 +263,7 @@ export default {
     },
   },
 
-  inject: ["observers"],
+  inject: ["observers", "theme"],
 
   created() {
     this.observers[this.$options.name] = this.onMobileChanged;

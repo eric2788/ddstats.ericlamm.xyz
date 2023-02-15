@@ -1,8 +1,16 @@
 <template>
-  <h3 class="mt-5 mb-3">细节排行统计</h3>
-  <v-switch color="orange" label="金额排行" v-model="priced" @change="fetchData"></v-switch>
+  <div class="mt-5 mb-3">
+    <h3 class="pt-4 float-left">细节排行统计</h3>
+    <v-switch
+      class="float-right"
+      color="warning"
+      label="金额排行"
+      v-model="priced"
+      @change="fetchData"
+    ></v-switch>
+  </div>
   <v-expansion-panels
-    theme="light"
+    :theme="theme()"
     class="elevation-0"
     multiple
     v-model="expands"
@@ -62,7 +70,7 @@
 
 <script>
 import LeaderBoardList from "../components/LeaderBoardList.vue";
-import { isPricable } from '../api/utils'
+import { isPricable } from "../api/utils";
 
 export default {
   name: "VueStatsCommandBoard",
@@ -175,7 +183,7 @@ export default {
       try {
         delete this.commands[command];
         if (!isPricable(command)) {
-          price = false
+          price = false;
         }
         const res = await this.fetcher(command, price);
         this.commands[command] = res;
@@ -217,7 +225,7 @@ export default {
     },
   },
 
-  inject: ["observers"],
+  inject: ["observers", "theme"],
 
   mounted() {
     this.onMobilechanged(this.$vuetify.display.smAndDown);

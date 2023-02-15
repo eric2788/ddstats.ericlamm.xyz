@@ -3,10 +3,10 @@
     <v-col cols="12" md="6" lg="6"> </v-col>
   </v-row>
   <h3 class="mt-5 mb-3">宏观排行统计</h3>
-  <v-expansion-panels theme="light" multiple v-model="expands">
+  <v-expansion-panels :theme="theme()" multiple v-model="expands">
     <v-row>
       <v-col cols="12" md="6" :lg="lgCols">
-        <v-table theme="light" class="elevation-0 el-border">
+        <v-table :theme="theme()" class="elevation-0 el-border">
           <thead>
             <tr>
               <th class="text-left">行为类型</th>
@@ -104,7 +104,7 @@ export default {
   computed: {
     lgCols(){
       return Math.max(Math.ceil(12 / (this.boards.length+1)), 3)
-    }
+    },
   },
 
   methods: {
@@ -142,7 +142,7 @@ export default {
     this.fetchData();
   },
 
-  inject: ["observers"],
+  inject: ["observers", "theme"],
 };
 </script>
 
