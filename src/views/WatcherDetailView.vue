@@ -180,19 +180,12 @@ export default {
   },
 
   data: () => ({
-    watcher: {
-      uid: 123456,
-      u_names: 'tester',
-      total_spent: 22222,
-      first_listen_at: new Date(),
-      dd_count: 333333,
-      last_behaviour_at: new Date()
-    },
+    watcher: null,
     loading: false,
     error: "",
 
     page: 1,
-    maxPage: 2,
+    maxPage: 1,
     total: 0,
     command: "所有",
 
