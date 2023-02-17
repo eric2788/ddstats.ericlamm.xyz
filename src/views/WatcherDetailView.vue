@@ -113,7 +113,7 @@
                     <span class="text-h7 mr-2">{{ record.display }}</span>
                   </v-row>
                   <v-row class="text-caption">
-                    {{ new Date(record.created_at).toLocaleString() }}
+                    {{ record.created_at }}
                   </v-row>
                 </v-col>
                 <v-col cols="12" sm="12" md="2" lg="2">
