@@ -307,7 +307,7 @@ export default {
 
 .scrollable {
   scrollbar-width: thin;
-  scrollbar-color: rgb(var(--v-theme-border)) #fff;
+  scrollbar-color: rgb(var(--v-theme-border)) rgb(var(--v-theme-borderline));
 }
 .el-border {
   border: 1px solid rgb(var(--v-theme-border));

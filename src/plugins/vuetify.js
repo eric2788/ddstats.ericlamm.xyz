@@ -17,7 +17,8 @@ export default createVuetify(
           colors: {
             background: '#FFFFFF',
             surface: '#474747',
-            border: '#e9e9e9'
+            border: '#e9e9e9',
+            borderline: '#ffffff'
           }
         },
         // create a dark theme
@@ -26,7 +27,8 @@ export default createVuetify(
           colors: {
             background: '#2b2b2b',
             surface: '#121212',
-            border: '#525252'
+            border: '#525252',
+            borderline: '#2b2b2b'
           },
         },
       }
