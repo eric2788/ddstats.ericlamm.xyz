@@ -79,7 +79,7 @@
             <v-list-item
               lines="three"
               title="风格跟随系统"
-              subtitle="本网站将会随着系统时间自动切换白天与黑暗模式。"
+              subtitle="本网站将会随着系统偏好自动切换白天与黑暗模式。"
               value="follow"
             >
               <template v-slot:prepend>
@@ -93,7 +93,7 @@
         <v-list>
           <v-list-item
             to="/about"
-            prepend-avatar="/img/author.jpg"
+            prepend-avatar="https://avatars.githubusercontent.com/u/6276840?v=4"
             title="关于本网站"
             subtitle="Eric Lam"
           ></v-list-item>
