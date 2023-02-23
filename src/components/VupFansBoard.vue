@@ -2,27 +2,10 @@
   <v-row justify="center">
     <v-col cols="12" md="6" lg="6"> </v-col>
   </v-row>
-  <h3 class="mt-5 mb-3">宏观排行统计</h3>
+  <h3 class="mt-5">粉丝排行统计</h3>
+  <small class="mb-3">(每24小时更新一次)</small>
   <v-expansion-panels class="mt-5" :theme="theme()" multiple v-model="expands">
     <v-row>
-      <v-col cols="12" md="6" :lg="lgCols">
-        <v-table :theme="theme()" class="elevation-0 el-border">
-          <thead>
-            <tr>
-              <th class="text-left">行为类型</th>
-              <th class="text-center">行为次数</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(behaviour, index) in behaviours" :key="index">
-              <td class="text-left">{{ behaviour.title }}</td>
-              <td class="text-center">
-                {{ showStats(behaviour) }}
-              </td>
-            </tr>
-          </tbody>
-        </v-table>
-      </v-col>
       <v-col cols="12" md="6" :lg="lgCols" v-for="(b, i) in boards" :key="i">
         <v-expansion-panel :value="b.panel" elevation="0" class="el-border">
           <v-expansion-panel-title>
@@ -30,8 +13,8 @@
             {{ b.title }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <leader-board-list :users="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
-            </leader-board-list>
+            <watcher-board-list :watchers="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
+            </watcher-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-col>
@@ -40,10 +23,10 @@
 </template>
 
 <script>
-import LeaderBoardList from "./LeaderBoardList.vue";
+import WatcherBoardList from './WatcherBoardList.vue';
 
 export default {
-  name: "VupStatsBoard",
+  name: "VupFansBoard",
 
   props: {
     boards: {
@@ -60,35 +43,19 @@ export default {
       default: () => [],
     },
 
-    behaviours: {
-      /* definition
-      {
-        title: '送礼' // String
-        price: 5 // Number
-        count: 2 // Number
-      }
-      */
-      type: Array,
-      default: () => [],
-    },
-
     fetcher: {
       type: Function,
       required: true,
       default: async () => {
         // simulate getting data after 3 seconds
         await new Promise((res,) => setTimeout(res, 3000))
-        return {
-          top_dd_vups: [],
-          top_guest_vups: [],
-          top_spent_vups: [],
-        }
+        return {}
       }
     },
   },
 
   components: {
-    LeaderBoardList,
+    WatcherBoardList,
   },
 
   data: () => ({
@@ -103,19 +70,16 @@ export default {
 
   computed: {
     lgCols(){
-      return Math.max(Math.ceil(12 / (this.boards.length+1)), 3)
+      return Math.max(Math.ceil(12 / (this.boards.length)), 3)
     },
   },
 
   methods: {
-    showStats(stats) {
-      return `${stats?.count} 次` + (stats.price > 0 ? ` (${stats.price} 元)` : "");
-    },
-
     fetchData() {
       this.loading = true
       return this.fetcher()
         .then(res => {
+          console.debug('response', res)
           this.response = res
         })
         .catch((err) => {

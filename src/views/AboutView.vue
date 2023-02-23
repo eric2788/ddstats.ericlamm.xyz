@@ -30,7 +30,7 @@
 
       </v-row>
       <v-row class="pt-5">
-         <v-col cols="12" sm=8>
+         <v-col cols="12" sm=6>
           <h3 class="mb-3">声明</h3>
            在基于包括但不限于 <b>网络连线不稳定，直播间监控列表时有变化，维护或更新期间的服务器重启或关闭</b> 等因素下，<b>本统计网站所统计的资料不能保证其完整性。</b> <br>
         </v-col>
@@ -41,6 +41,16 @@
           <b>QQ机器人:</b> <span v-html="link('https://github.com/eric2788/vup_monitors', 'vup_monitors')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/vup_monitors?style=social"/> <br>
           <b>直播间贡献:</b> <span v-html="link('https://github.com/eric2788/ddstats_client', 'ddstats_client')" /> <br> <img src="https://img.shields.io/github/stars/eric2788/ddstats_client?style=social"/>
        </v-col>
+       <v-col cols=12 sm=2>
+          <h3 class="mb-3">数据丢失记录</h3>
+          <ul>
+            <li>2023/2/17 - 晚上</li>
+            <li>2023/2/18 - 晚上</li>
+            <li>2023/2/22 - 晚上</li>
+            <li>2023/2/23 - 晚上</li>
+          </ul>
+          ...之后应该还有更多 😄
+        </v-col>
       </v-row>
   </v-container>
 </template>

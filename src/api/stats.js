@@ -23,10 +23,16 @@ async function getUserStatsByCommand(uid, command, price = false, limit = 10){
     return res.data.data
 }
 
+async function getFanStatsForVup(uid, type = '', limit = 10){
+    const res = await api.get(`/stats/${uid}/fans`, { params: { type, limit }})
+    return res.data.data
+}
+
 
 export default {
     getGlobalStats,
     getCommandStatus,
     getUserStats,
-    getUserStatsByCommand
+    getUserStatsByCommand,
+    getFanStatsForVup
 }

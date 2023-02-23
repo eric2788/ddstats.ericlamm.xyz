@@ -4,16 +4,25 @@
       <template v-if="!!error">
         <v-alert border type="error">
           <v-alert-title>用戶资讯加载失败: </v-alert-title>
-          {{ error }}
+          {{ error }}{{ not_found_user ? ', 要转用B站用户搜索吗?' : '' }}
         </v-alert>
         <v-btn
           class="mt-5"
           color="blue"
           variant="outlined"
+          prepend-icon="mdi-arrow-left"
           @click="$router.replace('/users')"
         >
-          <v-icon left>mdi-arrow-left</v-icon>
           返回列表
+        </v-btn>
+        <v-btn
+          class="ml-3 mt-5"
+          color="teal"
+          variant="outlined"
+          prepend-icon="mdi-account-search"
+          @click="$router.replace('/watcher/'+$route.params.uid)"
+         >
+          转到B站用户搜索
         </v-btn>
       </template>
       <template v-else>
@@ -88,6 +97,7 @@
       <v-divider />
       <v-row class="pa-5" justify="center"> </v-row>
       <vup-stats-board :boards="global_boards" :behaviours="global_behaviours" :fetcher="fetchUserStats"/>
+      <vup-fans-board :boards="fans_boards" :fetcher="fetchFanStats" />
       <vup-stats-command-board :guest_boards="guest_boards" :fetcher="fetchCommandStats" />
       <vup-records-board :vup="vup" />
     </template>
@@ -97,6 +107,7 @@
 <script>
 import UserListView from "../components/UserListView.vue";
 import VupStatsBoard from "../components/VupStatsBoard.vue";
+import VupFansBoard from "../components/VupFansBoard.vue";
 import VupStatsCommandBoard from "../components/VupStatsCommandBoard.vue";
 import VupRecordsBoard from "../components/VupRecordsBoard.vue";
 
@@ -113,12 +124,14 @@ export default {
     VupStatsBoard,
     VupStatsCommandBoard,
     VupRecordsBoard,
+    VupFansBoard,
   },
 
   data: () => ({
     vup: null,
     loading: true,
     error: "",
+    not_found_user: false,
 
     global_boards: [
         {
@@ -142,6 +155,23 @@ export default {
           panel: "3",
           command: 'top_spent_vups',
         },
+    ],
+
+    fans_boards: [
+      {
+        title: '互动最多的粉丝',
+        icon: 'mdi-account-heart',
+        subtitle: undefined,
+        panel: '1',
+        command: 'top_behaviours_fans',
+      },
+      {
+        title: '打赏金额最多的粉丝',
+        icon: 'mdi-cash-multiple',
+        subtitle: (props) => `共打赏 ${props.price} 元`,
+        panel: '2',
+        command: 'top_spent_fans',
+      }
     ],
 
     guest_boards: [
@@ -227,6 +257,10 @@ export default {
         .catch((err) => {
           console.error(err);
           this.error = getErrorMessage(err)
+          if (err.response?.status === 404) {
+            this.not_found_user = true;
+            return;
+          }
           this.$emit("error",{ msg: "加载用户资讯时错误: ", err});
         })
         .finally(() => (this.loading = false));
@@ -234,6 +268,29 @@ export default {
 
     async fetchUserStats() {
       return await stats.getUserStats(this.vup.uid)
+    },
+
+    async fetchFanStats() {
+      const result = {}
+
+      const fetchFans = async (type, command) => {
+        const data = await stats.getFanStatsForVup(this.vup.uid, type)
+        result[command] = data
+      }
+      const results = await Promise.allSettled([
+        fetchFans('behaviours', 'top_behaviours_fans'),
+        fetchFans('spent', 'top_spent_fans'),
+      ])
+
+      for (const result of results) {
+        if (result.status === "rejected") {
+          console.error(result.reason);
+          this.$emit("error", {msg: `加载统计数据时错误: ${result.reason}`, err: result.reason});
+          break;
+        }
+      }
+      console.log(result)
+      return result
     },
 
     async fetchCommandStats(command, price) {

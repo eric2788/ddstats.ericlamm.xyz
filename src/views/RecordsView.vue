@@ -2,7 +2,7 @@
   <v-container class="pa-5">
     <div align="center" justify="center">
       <span align="center" class="text-h6">已记录的高亮行为列表</span> <br />
-      <span class="text-h7">(经搜索共: {{ total }}个)</span>
+      <span class="text-h7">(经搜索共: {{ total }} 則)</span>
     </div>
     <v-row align="center" class="mt-10 text-center" justify="center">
       <v-col cols="12" md="6" lg="5">

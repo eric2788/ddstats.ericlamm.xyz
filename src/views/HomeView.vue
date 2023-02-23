@@ -12,12 +12,37 @@
         </v-col>
       </template>
     </v-row>
+    <h2 class="mt-5">主播统计排行</h2>
+    <small>此统计仅列出主播之间的排行，普通B站用户排行<!--span>请到 <router-link to="/watchers">B站用户搜索</router-link></span-->将于未来推出。</small>
     <v-divider />
     <h3 class="mt-5 mb-3">DD风云榜</h3>
     <v-expansion-panels :theme="theme()" multiple v-model="expands_1">
       <v-container class="pa-0">
         <v-row>
           <v-col cols="12" md="4" v-for="(b, i) in global_board" :key="i">
+            <v-expansion-panel class="el-border" elevation="0" :value="b.panel">
+              <v-expansion-panel-title>
+                <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
+                {{ b.title }}
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <leader-board-list
+                  :users="stats[b.key]"
+                  :subtitle="b.display"
+                  class="elevation-0"
+                ></leader-board-list>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-expansion-panels>
+
+    <h3 class="mt-5 mb-3">人气榜</h3>
+    <v-expansion-panels :theme="theme()" multiple v-model="expands_3">
+      <v-container class="pa-0">
+        <v-row>
+          <v-col cols="12" md="4" v-for="(b, i) in famous_board" :key="i">
             <v-expansion-panel class="el-border" elevation="0" :value="b.panel">
               <v-expansion-panel-title>
                 <v-icon large left class="pr-3">{{ b.icon }}</v-icon>
@@ -81,6 +106,7 @@ export default {
       commands: {},
       expands_1: [],
       expands_2: [],
+      expand_3: [],
 
       refresh_interval: -1,
 
@@ -141,6 +167,30 @@ export default {
           key: 'most_spent_vups',
           display: (props) => `共打赏 ${props.spent} 元`,
           panel: '1-3'
+        }
+      ],
+
+      famous_board: [
+        {
+          icon: 'mdi-account-multiple',
+          title: '访客人数最多',
+          key: 'most_famous_vups',
+          display: (props) => `共有 ${props.count} 个不同的访客`,
+          panel: '3-1'
+        },
+        {
+          icon: 'mdi-alpha-d-box',
+          title: '被互动次数最多',
+          key: 'most_interacted_vups',
+          display: (props) => `共有 ${props.count} 次互动`,
+          panel: '3-2'
+        },
+        {
+          icon: 'mdi-cash-multiple',
+          title: '被打赏的金额最多',
+          key: 'most_earned_vups',
+          display: (props) => `共被打赏 ${props.price} 元`,
+          panel: '3-3'
         }
       ],
 
@@ -241,6 +291,9 @@ export default {
         this.fetchStats("dd", "most_dd_vups"),
         this.fetchStats("behaviours", "most_dd_behaviour_vups"),
         this.fetchStats("spent", "most_spent_vups"),
+        this.fetchStats("famous", "most_famous_vups"),
+        this.fetchStats("interacted", "most_interacted_vups"),
+        this.fetchStats("earned", "most_earned_vups"),
         ...this.commands_to_show.map(this.fetchCommand),
         ...this.commands_price_to_show.map(this.fetchCommandPrice),
       ]);
@@ -256,9 +309,12 @@ export default {
       if (v) {
         this.expands_1 = [];
         this.expands_2 = [];
+        this.expand_3 = [];
       } else {
-        this.expands_1 = ["1-1", "1-2", "1-3"];
-        this.expands_2 = ["2-1", "2-2", "2-3", "2-4", "3-1", "3-2", "3-3", "3-4"];
+        this.expands_1 = this.global_board.map(b => b.panel);
+        this.expands_2 = this.detail_board.map(b => b.panel);
+        this.expands_3 = this.famous_board.map(b => b.panel);
+
       }
     },
   },
@@ -274,3 +330,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+a {
+  text-decoration: none;
+  font-weight: 500;
+}
+</style>
