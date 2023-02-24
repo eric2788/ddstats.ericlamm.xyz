@@ -1,5 +1,5 @@
 <template>
-    <v-container align=center justify=center :style="style" class="elevation-1">
+    <v-container align=center justify=center :style="style" class="elevation-0">
         <v-progress-circular
             :color="color"
             style="padding-top: 50%" 

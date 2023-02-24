@@ -1,5 +1,5 @@
 <template>
-  <v-list :theme="theme()" class="el-border scrollable" three-line height="400">
+  <v-list :theme="theme()" class="el-border scrollable" :lines="lines()" height="400">
     <template v-if="records && records.length > 0">
       <template v-for="(item, index) in records" :key="index">
         <v-list-item
@@ -22,7 +22,7 @@ export default {
     records: Array,
   },
 
-  inject: ['theme']
+  inject: ['theme', 'lines']
 };
 </script>
 

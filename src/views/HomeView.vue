@@ -13,7 +13,7 @@
       </template>
     </v-row>
     <h2 class="mt-5">主播统计排行</h2>
-    <small>此统计仅列出主播之间的排行，普通B站用户排行<!--span>请到 <router-link to="/watchers">B站用户搜索</router-link></span-->将于未来推出。</small>
+    <small>此统计仅列出主播之间的排行，普通B站用户排行<span>请到 <router-link to="/watchers">B站用户搜索</router-link></span></small>
     <v-divider />
     <h3 class="mt-5 mb-3">DD风云榜</h3>
     <v-expansion-panels :theme="theme()" multiple v-model="expands_1">
@@ -106,7 +106,7 @@ export default {
       commands: {},
       expands_1: [],
       expands_2: [],
-      expand_3: [],
+      expands_3: [],
 
       refresh_interval: -1,
 
@@ -309,7 +309,7 @@ export default {
       if (v) {
         this.expands_1 = [];
         this.expands_2 = [];
-        this.expand_3 = [];
+        this.expands_3 = [];
       } else {
         this.expands_1 = this.global_board.map(b => b.panel);
         this.expands_2 = this.detail_board.map(b => b.panel);

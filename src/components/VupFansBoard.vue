@@ -13,7 +13,7 @@
             {{ b.title }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <watcher-board-list :watchers="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
+            <watcher-board-list :subheader="b.title" :watchers="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
             </watcher-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -79,7 +79,6 @@ export default {
       this.loading = true
       return this.fetcher()
         .then(res => {
-          console.debug('response', res)
           this.response = res
         })
         .catch((err) => {
