@@ -21,7 +21,11 @@
           :loading="loading"
         ></v-text-field>
       </v-col>
+      <v-col cols=12 justify=center>
+        <v-btn variant="outlined" color="primary" to="/watchers/stats">查看宏观统计</v-btn>
+      </v-col>
     </v-row>
+    
     </v-form>
   </v-container>
 </template>
@@ -53,6 +57,9 @@ export default {
         }).catch(err => {
           console.warn(err)
           this.showError(getErrorMessage(err))
+          if (err.response?.status === 404) {
+            return // no need to send snackbar
+          }
           this.$emit('error', { msg: "加载用户资讯时错误: ", err })
         }).finally(() => this.loading = false)
     },
@@ -61,6 +68,10 @@ export default {
         this.errorMessage = error
         this.$refs.input?.validate()
         setTimeout(() => this.errorMessage = '', 1000)
+    },
+
+    onScroll(e){
+      console.log('scroll: ', e)
     },
 
     validateUID(v) {
@@ -81,6 +92,12 @@ export default {
       console.warn(err)
       this.$emit('error', { msg: "加载用户资讯时错误: ", err })
     })
+
+    window.addEventListener('wheel', this.onScroll)
+  },
+
+  unmounted() {
+    window.removeEventListener('wheel', this.onScroll)
   }
 };
 </script>

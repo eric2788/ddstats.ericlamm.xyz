@@ -16,6 +16,7 @@
           返回列表
         </v-btn>
         <v-btn
+          v-if="not_found_user"
           class="ml-3 mt-5"
           color="teal"
           variant="outlined"
