@@ -1,11 +1,14 @@
 <template>
   <template v-if="!loading && watchers">
-    <v-list color="white" elevation="1" three-line height="400" class="scrollable">
-      <v-list-subheader  v-if="subheader" :style="backgroundColor" :color="textColor">
-        {{ subheader }}
-      </v-list-subheader>
+    <v-list
+      color="white"
+      elevation="0"
+      :lines="lines()"
+      height="400"
+      class="scrollable"
+    >
       <template v-if="watchers?.length">
-        <template v-for="(watcher, i) in watchers" :key="i">
+        <template v-for="(watcher, i) in topUsers" :key="i">
           <v-list-item
             :height="i == 0 ? '100px' : '60px'"
             :title="watcher.u_name"
@@ -16,6 +19,13 @@
           </v-list-item>
           <v-divider />
         </template>
+        <v-btn
+          variant="text"
+          block
+          v-if="watchers.length > 10"
+          @click="dialog = true"
+          >查看更多</v-btn
+        >
       </template>
       <template v-else>
         <v-list-item class="text-center" title="没有记录"></v-list-item>
@@ -25,6 +35,38 @@
   <template v-else>
     <loading-grid :color="color"></loading-grid>
   </template>
+  <v-dialog v-model="dialog" width="800" class="overflow-hidden">
+    <v-card>
+      <v-card-text>
+        <v-list class="scrollable" height="800">
+          <v-list-subheader v-if="subheader">
+            {{ subheader }}
+          </v-list-subheader>
+          <template v-for="(watcher, i) in watchers" :key="i">
+            <v-lazy
+              :min-height="20"
+              :options="{ threshold: 0.5 }"
+              transition="fade-transition"
+            >
+              <v-list-item
+                :title="i + 1 + '. ' + watcher.u_name"
+                :subtitle="subtitle(watcher)"
+                :to="`/watcher/${watcher.uid}`"
+              >
+              </v-list-item>
+            </v-lazy>
+            <v-divider />
+          </template>
+        </v-list>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="gray-darken-1" variant="text" @click="dialog = false">
+          关闭
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -44,10 +86,6 @@ export default {
       type: String,
       default: "white",
     },
-    textColor: {
-      type: String,
-      default: "black",
-    },
     watchers: {
       type: Array,
       default: undefined,
@@ -57,17 +95,24 @@ export default {
       default: (props) => `共 ${props.count} 次`,
     },
     subheader: String,
-    bgColor: {
-      type: String,
-      default: "",
-    },
   },
+
+  data() {
+    return {
+      dialog: false,
+    };
+  },
+
+  inject: ["lines"],
 
   computed: {
     backgroundColor() {
       return this.bgColor
         ? `background-color: ${this.bgColor}; font-weight: bold`
         : "";
+    },
+    topUsers() {
+      return this.watchers.slice(0, 10);
     },
   },
 };

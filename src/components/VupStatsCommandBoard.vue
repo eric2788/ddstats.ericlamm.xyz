@@ -55,6 +55,7 @@
             </v-expansion-panel-title>
             <v-expansion-panel-text>
               <leader-board-list
+                :subheader="b.title"
                 :loading="loadings[b.command]"
                 :users="commands[b.command]?.top_guest_vups"
                 class="elevation-0"

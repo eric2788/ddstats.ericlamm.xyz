@@ -268,6 +268,7 @@ export default {
     return {
       observers: this.mobileChangeObservers,
       theme: () => (this.$vuetify.theme.current.dark ? "dark" : "light"),
+      lines: () => (this.$vuetify.display.md ? "three": "one")
     };
   },
 
@@ -327,5 +328,23 @@ export default {
   to {
     transform: scale(1);
   }
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(0, 5px);
+  }
+  100% {
+    transform: translate(0, -0px);
+  }
+}
+
+.floating-animation {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  animation: float 1.5s ease-in-out infinite;
 }
 </style>

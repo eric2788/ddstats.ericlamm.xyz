@@ -14,7 +14,21 @@ const routes = [
   {
     path: '/watchers',
     name: 'watchers',
-    component: () => import('../views/WatcherSearchView.vue')
+    component: () => import('../views/WatcherView.vue'),
+    children: [
+      {
+        path: '',
+        components: {
+          watcherView: () => import('../views/WatcherSearchView.vue')
+        }
+      },
+      {
+        path: 'stats',
+        components: {
+          watcherView: () => import('../views/WatcherStatsView.vue')
+        }
+      }
+    ]
   },
   {
     path: '/watcher/:uid',
@@ -45,7 +59,11 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // always scroll to top
+    return { top: 0 }
+  },
 })
 
 export default router

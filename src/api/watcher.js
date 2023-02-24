@@ -1,12 +1,12 @@
 import api from './axios'
 
 
-async function getGlobalStats(type, top = 10){
+async function getGlobalStats(type, top = 1000){
     const res = await api.get('/watcher/stats', {params: {type, top}})
     return res.data.data
 }
 
-async function getCommandStatus(command, price = false, top = 10) {
+async function getCommandStatus(command, price = false, top = 1000) {
     const res = await api.get(`/watcher/stats/command/${command}`, { params: { top, price } })
     return res.data.data
 }
@@ -26,7 +26,7 @@ async function getWatcherStats(uid) {
     return res.data.data
 }
 
-async function getWatcherStatsByCommand(uid, command, price = false, limit = 10){
+async function getWatcherStatsByCommand(uid, command, price = false, limit = 1000){
     const res = await api.get(`/watcher/stats/${uid}/${command}`, { params: { limit, price }})
     return res.data.data
 }

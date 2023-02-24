@@ -30,7 +30,7 @@
             {{ b.title }}
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <leader-board-list :users="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
+            <leader-board-list :subheader="b.title" :users="response[b.command]" :loading="loading" class="elevation-0" :subtitle="b.subtitle">
             </leader-board-list>
           </v-expansion-panel-text>
         </v-expansion-panel>
