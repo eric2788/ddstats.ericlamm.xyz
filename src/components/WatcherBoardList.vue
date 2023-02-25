@@ -40,6 +40,7 @@
                 {{ subheader }}
               </v-list-subheader>
               <recycle-scroller
+                page-mode
                 :items="watchers"
                 :item-size="60"
                 key-field="uid"
