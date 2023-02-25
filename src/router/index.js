@@ -18,12 +18,14 @@ const routes = [
     children: [
       {
         path: '',
+        name: 'search',
         components: {
           watcherView: () => import('../views/WatcherSearchView.vue')
         }
       },
       {
         path: 'stats',
+        name: 'stats',
         components: {
           watcherView: () => import('../views/WatcherStatsView.vue')
         }
