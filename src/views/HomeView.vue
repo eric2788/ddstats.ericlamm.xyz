@@ -27,6 +27,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
+                  :subheader="b.title"
                   :users="stats[b.key]"
                   :subtitle="b.display"
                   class="elevation-0"
@@ -50,6 +51,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
+                  :subheader="b.title"
                   :users="stats[b.key]"
                   :subtitle="b.display"
                   class="elevation-0"
@@ -73,6 +75,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
+                  :subheader="b.title"
                   class="elevation-0"
                   :users="commands[b.key]"
                   :subtitle="b.display"
@@ -299,7 +302,7 @@ export default {
       ]);
       for (const result of results) {
         if (result.status === "rejected") {
-          console.error(result.reason);
+          console.error(result.reason?.message || result.reason);
           this.$emit("error", {msg: `加载统计数据时错误: ${result.reason}`, err: result.reason});
           break;
         }

@@ -29,6 +29,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <watcher-board-list
+                  :subheader="b.title"
                   :watchers="stats[b.key]"
                   :subtitle="b.display"
                   class="elevation-0"
@@ -52,6 +53,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
+                  :subheader="b.title"
                   :users="stats[b.key]"
                   :subtitle="b.display"
                   class="elevation-0"
@@ -81,6 +83,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <watcher-board-list
+                  :subheader="b.title"
                   class="elevation-0"
                   :watchers="commands[b.key]"
                   :subtitle="b.display"
@@ -302,7 +305,7 @@ export default {
       ]);
       for (const result of results) {
         if (result.status === "rejected") {
-          console.error(result.reason);
+          console.error(result.reason?.message || result.reason);
           this.$emit("error", {
             msg: `加载统计数据时错误: ${result.reason}`,
             err: result.reason,
@@ -310,7 +313,6 @@ export default {
           break;
         }
       }
-      console.log("stats", this.stats);
     },
     onMobileChanged(v) {
       if (v) {
@@ -323,30 +325,15 @@ export default {
         this.expands_3 = this.famous_board.map((b) => b.panel);
       }
     },
-
-    onScroll(e) {
-      console.log(e);
-    },
-
-    onWheel(e) {
-      console.log(e);
-      /*
-      if (e.deltaY < -100) {
-        this.$router.push('/watchers')
-      }
-      */
-    },
   },
 
   inject: ["observers", "theme"],
 
   created() {
     this.observers[this.$options.name] = this.onMobileChanged;
-    window.addEventListener("wheel", this.onWheel);
   },
 
   beforeUnmount() {
-    window.removeEventListener("wheel", this.onWheel);
     clearInterval(this.refresh_interval);
   },
 };

@@ -268,7 +268,7 @@ export default {
     return {
       observers: this.mobileChangeObservers,
       theme: () => (this.$vuetify.theme.current.dark ? "dark" : "light"),
-      lines: () => (this.$vuetify.display.md ? "three": "one")
+      lines: () => (this.$vuetify.display.mdAndDown ? "three": "one")
     };
   },
 

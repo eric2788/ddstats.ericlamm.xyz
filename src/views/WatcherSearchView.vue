@@ -90,12 +90,6 @@ export default {
       setTimeout(() => (this.errorMessage = ""), 1000);
     },
 
-    onScroll(e) {
-      if (e.deltaY > 100) {
-        this.$router.push("/watchers/stats");
-      }
-    },
-
     validateUID(v) {
       if (!v) {
         return "UID不能为空";
@@ -117,12 +111,6 @@ export default {
         console.warn(err);
         this.$emit("error", { msg: "加载用户资讯时错误: ", err });
       });
-
-    window.addEventListener("wheel", this.onScroll);
-  },
-
-  beforeUnmount() {
-    window.removeEventListener("wheel", this.onScroll);
   },
 };
 </script>
