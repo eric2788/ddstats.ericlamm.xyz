@@ -77,7 +77,7 @@
               </v-expansion-panel-title>
               <v-expansion-panel-text>
                 <leader-board-list
-                  :use-virtual-scroller="false"
+           
                   :subheader="b.title"
                   class="elevation-0"
                   :users="commands[b.key]"

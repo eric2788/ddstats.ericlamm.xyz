@@ -40,8 +40,8 @@
               <v-list-subheader v-if="subheader">
                 {{ subheader }}
               </v-list-subheader>
-              <template v-if="useVirtualScroller">
-                <recycle-scroller
+              <recycle-scroller
+                  page-mode
                   :items="users"
                   :item-size="60"
                   key-field="uid"
@@ -63,26 +63,6 @@
                     </v-list-item>
                   </v-lazy>
                 </recycle-scroller>
-              </template>
-              <template v-else>
-                <template v-for="(vup, i) in users" :key="i">
-                  <v-lazy
-                    :min-height="20"
-                    :options="{ threshold: 1.0 }"
-                    transition="fade-transition"
-                  >
-                    <v-list-item
-                      class="user"
-                      height="60px"
-                      :prepend-avatar="vup.face.replace('http://', 'https://')"
-                      :title="i + 1 + '. ' + vup.name"
-                      :subtitle="subtitle(vup)"
-                      :to="`/user/${vup.uid}`"
-                    >
-                    </v-list-item>
-                  </v-lazy>
-                </template>
-              </template>
             </v-list>
           </v-card-text>
           <v-card-actions>
@@ -127,12 +107,6 @@ export default {
       default: (props) => `共 ${props.count} 次`,
     },
     subheader: String,
-
-    // not sure why on HomeView this is not working, but WatcherStatsView works fine (they have even same pattern??)
-    useVirtualScroller: {
-      type: Boolean,
-      default: true,
-    },
   },
 
   data: () => ({
