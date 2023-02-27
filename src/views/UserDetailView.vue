@@ -220,6 +220,10 @@ export default {
       () => this.$route.params,
       () => {
         if (!this.$route.params.uid || !this.$route.path.startsWith('/user')) return;
+        if (this.$route.params.uid.toLocaleLowerCase().startsWith('uid')){
+          this.$router.replace({ path: `/user/${this.$route.params.uid.slice(3)}` })
+          return;
+        }
         this.fetchData();
       },
       { immediate: true }

@@ -10,6 +10,7 @@
           v-model.lazy.trim="search"
           label="搜索主播"
           variant="underlined"
+          placeholder="可直接搜索UID"
           prepend-icon="mdi-account-search"
           :loading="loading"
           :disabled="disabled"
