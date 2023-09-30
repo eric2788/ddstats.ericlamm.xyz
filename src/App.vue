@@ -117,6 +117,30 @@
         </v-btn>
       </template>
     </v-snackbar>
+     <!--- extra content -->
+     <v-slide-y-transition>
+      <v-snackbar multi-line timeout="30000" v-model="announcement" light vertical location="top" transition="slide-y-reverse-transition">
+      <v-card color="transparent" elevation="0" class="pa-0 ma-0">
+       <v-card-header>
+          <v-spacer></v-spacer>
+          <v-btn color="grey-darken-1" size="x-small" class="float-right" icon variant="text" @click="announcement = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+       </v-card-header>
+        <v-card-title>由於B站的反爬虫机制越趋严格，DDStats将於一个月内关站</v-card-title>
+        <v-card-text>
+          作为上班族的我本来就没什么时间，加之B站的反爬虫机制越趋严格，且所耗费的资源和时间成本只会越来越巨大，这将对于免费服务越来越不利。<br>
+          <br>
+          <b>因此，本人决定将於一个月内永久关闭DDStats。</b>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="red" @click="announcement = false">关闭</v-btn>
+          <v-btn variant="text" color="green" href="https://github.com/eric2788/ddstats.ericlamm.xyz/discussions/6" target="_blank">查看详情</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-snackbar>
+    </v-slide-y-transition>
   </v-app>
 </template>
 
@@ -157,7 +181,7 @@ export default {
     expanded_group: [],
     dark_theme: false,
     dark_follow_system: false,
-
+    announcement: true,
     systemThemeDetector: null,
   }),
 
